@@ -1,0 +1,15 @@
+{
+  "name": "multi-client-plugin",
+  "description": "Build and maintain plugin marketplaces that install in both Claude Code and Codex CLI from one set of skill and hook sources: registry, generator, client differences, and a pre-publish privacy checklist",
+  "author": {
+    "name": "plong"
+  },
+  "version": "1.0.0+dc3e0aefe65b",
+  "interface": {
+    "displayName": "multi-client-plugin",
+    "shortDescription": "Build and maintain plugin marketplaces that install in both Claude Code and Code",
+    "developerName": "plong",
+    "category": "Productivity",
+    "capabilities": []
+  }
+}

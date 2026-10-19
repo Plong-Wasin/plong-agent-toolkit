@@ -398,6 +398,17 @@
         "claude"
       ],
       "compatibilityNote": "Installs the Claude Code statusline."
+    },
+    {
+      "name": "multi-client-plugin",
+      "description": "Build and maintain plugin marketplaces that install in both Claude Code and Codex CLI from one set of skill and hook sources: registry, generator, client differences, and a pre-publish privacy checklist",
+      "skills": [
+        "./skills/multi-client-plugin"
+      ],
+      "clients": [
+        "claude",
+        "codex"
+      ]
     }
   ]
 }

@@ -107,6 +107,11 @@
       "name": "plong-statusline",
       "source": "./plugins/plong-statusline",
       "description": "Plong's Claude Code statusline (model, effort, directory, git branch, context %, 5-hour / weekly plan usage), installed with /plong-statusline:plong-statusline"
+    },
+    {
+      "name": "multi-client-plugin",
+      "source": "./plugins/multi-client-plugin",
+      "description": "Build and maintain plugin marketplaces that install in both Claude Code and Codex CLI from one set of skill and hook sources: registry, generator, client differences, and a pre-publish privacy checklist"
     }
   ]
 }

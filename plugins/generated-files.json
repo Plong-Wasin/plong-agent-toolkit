@@ -24,6 +24,8 @@
   "plugins/linux-mint-appimage/.codex-plugin/plugin.json",
   "plugins/management-talk/.claude-plugin/plugin.json",
   "plugins/management-talk/.codex-plugin/plugin.json",
+  "plugins/multi-client-plugin/.claude-plugin/plugin.json",
+  "plugins/multi-client-plugin/.codex-plugin/plugin.json",
   "plugins/php-test-parallel-hook/.claude-plugin/plugin.json",
   "plugins/php-test-parallel-hook/.codex-plugin/plugin.json",
   "plugins/phpstan-array-shapes/.claude-plugin/plugin.json",
