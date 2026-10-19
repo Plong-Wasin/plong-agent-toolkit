@@ -1,0 +1,4 @@
+interface:
+  display_name: "Linux Mint AppImage"
+  short_description: "จัดการ AppImage บน Linux Mint Cinnamon"
+  default_prompt: "ใช้ $linux-mint-appimage เพื่อติดตั้งและเพิ่ม AppImage เข้าเมนูหรือ taskbar บน Linux Mint Cinnamon"

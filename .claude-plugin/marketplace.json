@@ -1,0 +1,112 @@
+{
+  "name": "plong-agent-toolkit",
+  "owner": {
+    "name": "plong"
+  },
+  "metadata": {
+    "description": "Shareable skills and hooks for Codex and Claude Code",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "commit",
+      "source": "./plugins/commit",
+      "description": "Create a git commit with auto-generated message based on staged/unstaged changes, then optionally push"
+    },
+    {
+      "name": "review-uncommit",
+      "source": "./plugins/review-uncommit",
+      "description": "Expert code review of uncommitted git changes, output in Thai"
+    },
+    {
+      "name": "review-branch",
+      "source": "./plugins/review-branch",
+      "description": "Expert code review of branch diffs, output in Thai"
+    },
+    {
+      "name": "kreuzberg",
+      "source": "./plugins/kreuzberg",
+      "description": "Extract text from binary documents (DOCX, PDF, PPTX, XLSX) via Docker"
+    },
+    {
+      "name": "phpstan-array-shapes",
+      "source": "./plugins/phpstan-array-shapes",
+      "description": "Generate PHPStan PHPDoc array shape type annotations for PHP code — nested arrays, optional keys, type aliases, and best practices"
+    },
+    {
+      "name": "client-html",
+      "source": "./plugins/client-html",
+      "description": "Create client-facing HTML proposals and workflow explanations with readable diagrams, concrete examples, and relevant trade-offs."
+    },
+    {
+      "name": "management-talk",
+      "source": "./plugins/management-talk",
+      "description": "Rewrite engineer-to-engineer content for engineering-org leadership (VPs, directors, PMs, release managers, execs in an engineering-savvy company) and shape it for the channel it is going to — JIRA comment, Slack post, async standup line, email, or meeting talking-points. Trigger when the user asks to write/rewrite for management / exec / VP / director / PM / release manager, asks for an \"executive summary / leadership update / status update\", says \"make this less technical / less jargony\", or asks for a slack / email / standup / meeting version of work originally written engineer-to-engineer."
+    },
+    {
+      "name": "scrutinize",
+      "source": "./plugins/scrutinize",
+      "description": "Outsider-perspective end-to-end review of a plan, PR, or code change. First questions intent and whether a simpler/more elegant approach would achieve the same goal, then traces the actual code path (not just the diff) to verify the change does what it claims. Output is concise, actionable, and every call carries its rationale. Trigger on /scrutinize and proactively whenever the user asks to review, audit, sanity-check, or get a second opinion on a plan, PR, diff, design doc, or proposed code change."
+    },
+    {
+      "name": "laravel-test-filter",
+      "source": "./plugins/laravel-test-filter",
+      "description": "Build the correct php artisan test command for running a subset of test classes/files with --parallel --processes=N — via folder path, --filter regex alternation, FQCN filters for duplicate class names, or a PHPUnit testsuite for recurring subsets"
+    },
+    {
+      "name": "laravel-test-lock",
+      "source": "./plugins/laravel-test-lock",
+      "description": "Shared host lock for local and Docker Laravel/PHPUnit/ParaTest/Pest runs. Queues the complete command through one runner and accepts legacy host flock commands using the same lock. Replaces php-test-lock-hook; also supports Codex hook input."
+    },
+    {
+      "name": "laravel-worktree-bootstrap",
+      "source": "./plugins/laravel-worktree-bootstrap",
+      "description": "Prepare a Laravel Git worktree with local vendor dependencies, .env.testing, and required ignored runtime files"
+    },
+    {
+      "name": "php-test-parallel-hook",
+      "source": "./plugins/php-test-parallel-hook",
+      "description": "Block php artisan test Bash calls that omit --parallel --processes=<half of CPU cores>, so the agent adds it itself"
+    },
+    {
+      "name": "sudo-confirm-hook",
+      "source": "./plugins/sudo-confirm-hook",
+      "description": "Force explicit approve/deny on any Bash command that invokes sudo"
+    },
+    {
+      "name": "usage-guard-hook",
+      "source": "./plugins/usage-guard-hook",
+      "description": "Stop prompts and tool calls when a claude.ai plan limit (5-hour or weekly) reaches its threshold, so work never spills into paid extra-usage credits. Reads usage from the usage endpoint and, after the one-time usage-guard-statusline skill, from the statusline too"
+    },
+    {
+      "name": "account-fallback",
+      "source": "./plugins/account-fallback",
+      "description": "Linux Claude subscription account fallback with configurable priority, login, and separate 5-hour/weekly usage thresholds. Experimental credential adoption in running sessions."
+    },
+    {
+      "name": "ai-usage-dashboard",
+      "source": "./plugins/ai-usage-dashboard",
+      "description": "Collect AI token usage and cost with ccusage and render a standalone HTML dashboard with filters by source, tool, model and date range"
+    },
+    {
+      "name": "api-flow-prototype",
+      "source": "./plugins/api-flow-prototype",
+      "description": "Build self-contained clickable HTML prototypes that show UI state and the exact API calls each action would produce, with deferred-save or immediate-save flows and named scenarios"
+    },
+    {
+      "name": "linux-mint-appimage",
+      "source": "./plugins/linux-mint-appimage",
+      "description": "Install and integrate downloaded AppImages on Linux Mint Cinnamon, including stable storage, desktop launchers, embedded icons, duplicate menu entries, and taskbar pinning"
+    },
+    {
+      "name": "linux-mint-app-hotkey",
+      "source": "./plugins/linux-mint-app-hotkey",
+      "description": "Set up a Cinnamon custom keyboard shortcut on Linux Mint that launches an app, or focuses its window if already open — includes window class detection, keybinding-conflict checks, and the Cinnamon-reload workaround when a new shortcut doesn't fire"
+    },
+    {
+      "name": "plong-statusline",
+      "source": "./plugins/plong-statusline",
+      "description": "Plong's Claude Code statusline (model, effort, directory, git branch, context %, 5-hour / weekly plan usage), installed with /plong-statusline:plong-statusline"
+    }
+  ]
+}

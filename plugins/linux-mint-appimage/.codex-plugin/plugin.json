@@ -1,0 +1,15 @@
+{
+  "name": "linux-mint-appimage",
+  "description": "Install and integrate downloaded AppImages on Linux Mint Cinnamon, including stable storage, desktop launchers, embedded icons, duplicate menu entries, and taskbar pinning",
+  "author": {
+    "name": "plong"
+  },
+  "version": "1.0.0+61917febaf4c",
+  "interface": {
+    "displayName": "linux-mint-appimage",
+    "shortDescription": "Install and integrate downloaded AppImages on Linux Mint Cinnamon, including sta",
+    "developerName": "plong",
+    "category": "Productivity",
+    "capabilities": []
+  }
+}

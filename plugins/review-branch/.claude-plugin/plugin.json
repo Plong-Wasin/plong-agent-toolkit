@@ -1,0 +1,8 @@
+{
+  "name": "review-branch",
+  "description": "Expert code review of branch diffs, output in Thai",
+  "author": {
+    "name": "plong"
+  },
+  "version": "1.0.0+17cb7c926e60"
+}

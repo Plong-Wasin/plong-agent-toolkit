@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Token Usage Dashboard</title>
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--ink:#222;--muted:#6b7280;--line:#e3e5e8;--accent:#f6821f;--accent2:#0051c3;--hover:#fafafa}
+@media (prefers-color-scheme:dark){:root{--bg:#14161a;--card:#1d2026;--ink:#eceff3;--muted:#98a1ad;--line:#2d323a;--hover:#23272e;--accent2:#5b9bff}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "Noto Sans Thai","Sarabun",-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:var(--card);border-bottom:1px solid var(--line);padding:14px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{width:28px;height:28px;border-radius:6px;background:var(--accent)}
+header h1{font-size:1.1rem;margin:0;font-weight:600}
+header .sub{color:var(--muted);font-size:.85rem;margin-left:auto}
+main{max-width:1180px;margin:0 auto;padding:22px 20px 60px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:18px;flex-wrap:wrap}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:8px 14px;font:inherit;color:var(--muted);cursor:pointer}
+.tabs button[aria-selected=true]{color:var(--accent2);border-bottom-color:var(--accent2);font-weight:600}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:14px 16px}
+.card .k{color:var(--muted);font-size:.82rem}
+.card .v{font-size:1.65rem;font-weight:600;line-height:1.3}
+.card .s{color:var(--muted);font-size:.8rem}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:6px;margin-bottom:18px}
+.panel h2{font-size:.98rem;margin:0;padding:12px 16px;border-bottom:1px solid var(--line);font-weight:600}
+.panel .body{padding:14px 16px}
+.chart{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.82rem;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{padding:9px 14px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--muted);font-weight:500;background:var(--hover)}
+tbody tr:hover{background:var(--hover)}
+.bar{display:inline-block;height:8px;border-radius:4px;background:var(--accent);vertical-align:middle;margin-right:6px}
+.badge{font-size:.72rem;border-radius:99px;padding:1px 8px;border:1px solid var(--line);color:var(--muted);margin-left:6px}
+.fbar{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:10px 14px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;position:relative}
+.fbar select,.fbar input,.fbar button{font:inherit;font-size:.86rem;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:5px;padding:5px 10px}
+.fbar button{cursor:pointer}.fbar button.pri{color:var(--accent2);border-color:var(--accent2)}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--hover);border:1px solid var(--line);border-radius:99px;padding:3px 6px 3px 12px;font-size:.84rem}
+.chip b{font-weight:600}.chip button{border:0;background:none;padding:0 6px;color:var(--muted);font-size:1rem;line-height:1}
+.pop{position:absolute;top:100%;left:14px;margin-top:6px;z-index:5;background:var(--card);border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.15);padding:12px;min-width:280px;max-width:92vw}
+.pop h3{font-size:.8rem;margin:0 0 8px;color:var(--muted);font-weight:500}
+.pop .row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.pop .vals{max-height:200px;overflow:auto;border:1px solid var(--line);border-radius:5px;padding:4px 8px;margin-bottom:8px}
+.pop label{display:block;padding:2px 0;font-size:.86rem;cursor:pointer}
+.spacer{flex:1}
+.note{color:var(--muted);font-size:.83rem}
+@media print{body{background:#fff}.tabs{display:none}.panel,.card{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header><div class="logo" aria-hidden="true"></div><h1>AI Token Usage</h1><span class="badge" id="range"></span><span class="sub">สร้างจาก ccusage · __GEN__</span></header>
+<main>
+<div class="fbar" id="fbar">
+<select id="range-sel" aria-label="ช่วงเวลา"><option value="all">ทั้งหมด</option><option value="7">7 วันล่าสุด</option><option value="14">14 วันล่าสุด</option><option value="30">30 วันล่าสุด</option><option value="custom">กำหนดเอง</option></select>
+<span id="custom" hidden><input type="date" id="from" aria-label="จากวันที่"> – <input type="date" id="to" aria-label="ถึงวันที่"></span>
+<span id="chips" style="display:contents"></span>
+<button class="pri" id="add" type="button">+ เพิ่ม filter</button>
+<span class="spacer"></span><button id="clear" type="button" hidden>ล้างทั้งหมด</button>
+<div class="pop" id="pop" hidden></div>
+</div>
+<div class="cards" id="cards"></div>
+<div class="panel"><h2>ค่าใช้จ่ายรายวัน แยกตามโมเดล (USD)</h2><div class="body"><svg class="chart" id="daily" viewBox="0 0 1100 320" role="img" aria-label="กราฟแท่งค่าใช้จ่ายรายวัน"></svg><div class="legend" id="legend"></div></div></div>
+<div class="panel"><h2>สรุปตามแหล่งข้อมูล</h2><div class="tw"><table id="src"></table></div></div>
+<div class="panel"><h2>สรุปตามโมเดล</h2><div class="tw"><table id="models"></table></div></div>
+<div class="panel"><h2>ค่าใช้จ่ายรายวัน</h2><div class="tw"><table id="days"></table></div></div>
+<p class="note"><b>แหล่งข้อมูล:</b> __NOTE__</p>
+<p class="note">ราคาที่แสดงคือ <b>ราคาประมาณที่ ccusage คำนวณจากอัตรา API ต่อ token</b> (input / output / cache) หากใช้แบบสมาชิกรายเดือน จำนวนเงินที่จ่ายจริงจะไม่เท่ากับตัวเลขนี้ ใช้เปรียบเทียบสัดส่วนว่าโมเดลไหนใช้ token มากน้อยเพียงใด</p>
+</main>
+<script>
+const DATA=__DATA__;
+const FIELDS={s:'แหล่งข้อมูล',a:'เครื่องมือ',m:'โมเดล'};
+const LABEL=Object.assign({claude:'Claude Code',codex:'Codex'},__LABELS__);
+const lab=v=>LABEL[v]||v;
+const fmt=n=>n>=1e9?(n/1e9).toFixed(2)+'B':n>=1e6?(n/1e6).toFixed(2)+'M':n>=1e3?(n/1e3).toFixed(1)+'K':String(Math.round(n));
+const usd=n=>'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const COLORS=['#f6821f','#0051c3','#2e9e6b','#9b5de5','#e04f5f','#17a2b8','#c8a400','#7a8794','#d6609b','#4c6ef5','#8a5a2b','#5fb0a5','#2f855a','#b83280'];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const DAYS=[...new Set(DATA.map(x=>x.d))].sort();
+const LAST=DAYS[DAYS.length-1];
+let filters=[];let range='all';let from='',to='';
+function inRange(d){
+  if(range==='all')return true;
+  if(range==='custom')return(!from||d>=from)&&(!to||d<=to);
+  const e=new Date(LAST+'T00:00:00Z');e.setUTCDate(e.getUTCDate()-(+range-1));return d>=e.toISOString().slice(0,10);
+}
+function match(x){return filters.every(f=>{const has=f.v.includes(x[f.f]);return f.op==='is'?has:!has})}
+function distinct(f){return [...new Set(DATA.map(x=>x[f]))].sort()}
+function fillPop(){
+  const p=$('pop');
+  p.innerHTML=`<h3>เพิ่ม filter</h3><div class="row"><select id="pf">${Object.entries(FIELDS).map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select><select id="po"><option value="is">เท่ากับ</option><option value="not">ไม่เท่ากับ</option></select></div><div class="vals" id="pv"></div><div class="row"><button class="pri" id="ok" type="button">ใช้ filter</button><button id="cancel" type="button">ยกเลิก</button></div>`;
+  const vals=()=>{$('pv').innerHTML=distinct($('pf').value).map(v=>`<label><input type="checkbox" value="${esc(v)}"> ${esc(lab(v))}</label>`).join('')};
+  $('pf').onchange=vals;vals();
+  $('cancel').onclick=()=>p.hidden=true;
+  $('ok').onclick=()=>{const v=[...$('pv').querySelectorAll('input:checked')].map(i=>i.value);if(v.length){filters.push({f:$('pf').value,op:$('po').value,v})}p.hidden=true;render()};
+}
+$('add').onclick=()=>{const p=$('pop');if(p.hidden){fillPop();p.hidden=false}else p.hidden=true};
+$('range-sel').onchange=e=>{range=e.target.value;$('custom').hidden=range!=='custom';render()};
+$('from').onchange=e=>{from=e.target.value;render()};$('to').onchange=e=>{to=e.target.value;render()};
+$('clear').onclick=()=>{filters=[];range='all';from=to='';$('range-sel').value='all';$('custom').hidden=true;$('from').value=$('to').value='';render()};
+function render(){
+  $('chips').innerHTML=filters.map((f,i)=>`<span class="chip"><span>${FIELDS[f.f]} <b>${f.op==='is'?'=':'≠'}</b> ${esc(f.v.map(lab).join(', '))}</span><button data-i="${i}" aria-label="ลบ filter">×</button></span>`).join('');
+  $('chips').querySelectorAll('button').forEach(b=>b.onclick=()=>{filters.splice(+b.dataset.i,1);render()});
+  $('clear').hidden=!(filters.length||range!=='all');
+  const r=DATA.filter(x=>inRange(x.d)&&match(x));
+  const tot=r.reduce((s,x)=>{s.c+=x.c;s.i+=x.i;s.o+=x.o;s.cr+=x.cr;s.cw+=x.cw;return s},{c:0,i:0,o:0,cr:0,cw:0});
+  const days=[...new Set(r.map(x=>x.d))].sort();
+  $('range').textContent=DAYS[0]+' – '+LAST;
+  const all=tot.i+tot.o+tot.cr+tot.cw;
+  const bm={};r.forEach(x=>{const m=bm[x.m]??={c:0,i:0,o:0,cr:0,cw:0,a:x.a};m.c+=x.c;m.i+=x.i;m.o+=x.o;m.cr+=x.cr;m.cw+=x.cw});
+  const models=Object.entries(bm).sort((a,b)=>b[1].c-a[1].c);
+  const bs={};r.forEach(x=>bs[x.s]=(bs[x.s]||0)+x.c);
+  $('cards').innerHTML=[
+    ['ค่าใช้จ่ายรวม (ประมาณ)',usd(tot.c),days.length+' วันที่มีการใช้งาน เฉลี่ย '+usd(tot.c/Math.max(days.length,1))+'/วัน'],
+    ['Token ทั้งหมด',fmt(all),'รวม input, output และ cache'],
+    ['Output token',fmt(tot.o),'Input '+fmt(tot.i)],
+    ['Cache (อ่าน / เขียน)',fmt(tot.cr)+' / '+fmt(tot.cw),'ส่วนใหญ่คือการใช้บริบทซ้ำ'],
+    ['แยกตามแหล่ง',Object.keys(bs).map(k=>usd(bs[k])).join(' + ')||'-',Object.keys(bs).map(lab).join(' + ')||'ไม่มีข้อมูลตาม filter']
+  ].map(([k,v,s])=>`<div class="card"><div class="k">${k}</div><div class="v" style="${v.length>16?'font-size:1.2rem':''}">${v}</div><div class="s">${s}</div></div>`).join('');
+  const names=[...new Set(DATA.map(x=>x.m))].sort((a,b)=>(bm[b]?.c||0)-(bm[a]?.c||0));
+  const allNames=[...new Set(DATA.map(x=>x.m))].sort();
+  const col=n=>COLORS[allNames.indexOf(n)%COLORS.length];
+  const W=1100,H=320,L=56,B=34,T=10,R=10,pw=W-L-R,ph=H-T-B;
+  const perDay=days.map(d=>{const o={};r.filter(x=>x.d===d).forEach(x=>o[x.m]=(o[x.m]||0)+x.c);return[d,o,Object.values(o).reduce((a,b)=>a+b,0)]});
+  const max=Math.max(1,...perDay.map(p=>p[2]));const nice=Math.pow(10,Math.floor(Math.log10(max)));const top=Math.ceil(max/nice*2)/2*nice||1;
+  let s='';
+  for(let i=0;i<=4;i++){const y=T+ph-ph*i/4;s+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="currentColor" stroke-opacity=".12"/><text x="${L-6}" y="${y+4}" text-anchor="end" font-size="11" fill="currentColor" opacity=".6">$${(top*i/4).toFixed(0)}</text>`}
+  const bw=pw/Math.max(days.length,1);
+  perDay.forEach(([d,o],i)=>{let y=T+ph;const x=L+i*bw+bw*.12;
+    for(const n of names){const v=o[n]||0;if(!v)continue;const h=v/top*ph;y-=h;s+=`<rect x="${x}" y="${y}" width="${bw*.76}" height="${h}" fill="${col(n)}"><title>${d} · ${n}: ${usd(v)}</title></rect>`}
+    if(i%Math.ceil(days.length/12)===0)s+=`<text x="${x+bw*.38}" y="${H-12}" text-anchor="middle" font-size="10" fill="currentColor" opacity=".6">${d.slice(5)}</text>`});
+  $('daily').innerHTML=s||'';
+  $('legend').innerHTML=models.map(([n])=>`<span><i style="background:${col(n)}"></i>${n}</span>`).join('');
+  const mx=models[0]?models[0][1].c:1;
+  $('models').innerHTML=`<thead><tr><th>โมเดล</th><th>ราคา (USD)</th><th>สัดส่วน</th><th>Input</th><th>Output</th><th>Cache อ่าน</th><th>Cache เขียน</th><th>Token รวม</th></tr></thead><tbody>`+
+   (models.map(([n,m])=>`<tr><td>${n}<span class="badge">${m.a}</span></td><td>${usd(m.c)}</td><td><span class="bar" style="width:${Math.max(2,m.c/mx*80)}px"></span>${(m.c/tot.c*100).toFixed(1)}%</td><td>${fmt(m.i)}</td><td>${fmt(m.o)}</td><td>${fmt(m.cr)}</td><td>${fmt(m.cw)}</td><td>${fmt(m.i+m.o+m.cr+m.cw)}</td></tr>`).join('')||'<tr><td colspan="8" style="text-align:center">ไม่มีข้อมูลตาม filter</td></tr>')+
+   `<tr><td><b>รวม</b></td><td><b>${usd(tot.c)}</b></td><td>100%</td><td>${fmt(tot.i)}</td><td>${fmt(tot.o)}</td><td>${fmt(tot.cr)}</td><td>${fmt(tot.cw)}</td><td>${fmt(all)}</td></tr></tbody>`;
+  const bsrc={};r.forEach(x=>{const k=x.s+'|'+x.a;const m=bsrc[k]??={s:x.s,a:x.a,c:0,t:0};m.c+=x.c;m.t+=x.i+x.o+x.cr+x.cw});
+  $('src').innerHTML=`<thead><tr><th>แหล่งข้อมูล</th><th>เครื่องมือ</th><th>ราคา (USD)</th><th>Token รวม</th></tr></thead><tbody>`+Object.values(bsrc).sort((a,b)=>b.c-a.c).map(m=>`<tr><td>${lab(m.s)}</td><td>${lab(m.a)}</td><td>${usd(m.c)}</td><td>${fmt(m.t)}</td></tr>`).join('')+'</tbody>';
+  $('days').innerHTML=`<thead><tr><th>วันที่</th><th>ราคา (USD)</th><th>Output</th><th>Token รวม</th><th>โมเดลที่ใช้</th></tr></thead><tbody>`+
+   [...days].reverse().map(d=>{const x=r.filter(q=>q.d===d);return`<tr><td>${d}</td><td>${usd(x.reduce((a,b)=>a+b.c,0))}</td><td>${fmt(x.reduce((a,b)=>a+b.o,0))}</td><td>${fmt(x.reduce((a,b)=>a+b.i+b.o+b.cr+b.cw,0))}</td><td style="text-align:right;white-space:normal">${[...new Set(x.map(q=>q.m))].join(', ')}</td></tr>`}).join('')+'</tbody>';
+}
+render();
+</script>
+</body>
+</html>

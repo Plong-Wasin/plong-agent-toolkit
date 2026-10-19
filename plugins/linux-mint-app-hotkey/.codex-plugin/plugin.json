@@ -1,0 +1,15 @@
+{
+  "name": "linux-mint-app-hotkey",
+  "description": "Set up a Cinnamon custom keyboard shortcut on Linux Mint that launches an app, or focuses its window if already open — includes window class detection, keybinding-conflict checks, and the Cinnamon-reload workaround when a new shortcut doesn't fire",
+  "author": {
+    "name": "plong"
+  },
+  "version": "1.0.0+54c5cc97de47",
+  "interface": {
+    "displayName": "linux-mint-app-hotkey",
+    "shortDescription": "Set up a Cinnamon custom keyboard shortcut on Linux Mint that launches an app, o",
+    "developerName": "plong",
+    "category": "Productivity",
+    "capabilities": []
+  }
+}

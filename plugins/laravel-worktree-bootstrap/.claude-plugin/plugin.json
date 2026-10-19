@@ -1,0 +1,8 @@
+{
+  "name": "laravel-worktree-bootstrap",
+  "description": "Prepare a Laravel Git worktree with local vendor dependencies, .env.testing, and required ignored runtime files",
+  "author": {
+    "name": "plong"
+  },
+  "version": "1.0.0+ad2b7aacd72d"
+}

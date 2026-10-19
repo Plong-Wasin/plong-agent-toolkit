@@ -1,0 +1,15 @@
+{
+  "name": "kreuzberg",
+  "description": "Extract text from binary documents (DOCX, PDF, PPTX, XLSX) via Docker",
+  "author": {
+    "name": "plong"
+  },
+  "version": "1.0.0+2b42238912c2",
+  "interface": {
+    "displayName": "kreuzberg",
+    "shortDescription": "Extract text from binary documents (DOCX, PDF, PPTX, XLSX) via Docker",
+    "developerName": "plong",
+    "category": "Productivity",
+    "capabilities": []
+  }
+}

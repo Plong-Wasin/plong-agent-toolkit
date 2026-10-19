@@ -1,0 +1,15 @@
+{
+  "name": "laravel-test-filter",
+  "description": "Build the correct php artisan test command for running a subset of test classes/files with --parallel --processes=N — via folder path, --filter regex alternation, FQCN filters for duplicate class names, or a PHPUnit testsuite for recurring subsets",
+  "author": {
+    "name": "plong"
+  },
+  "version": "1.0.0+af4236695672",
+  "interface": {
+    "displayName": "laravel-test-filter",
+    "shortDescription": "Build the correct php artisan test command for running a subset of test classes/",
+    "developerName": "plong",
+    "category": "Productivity",
+    "capabilities": []
+  }
+}

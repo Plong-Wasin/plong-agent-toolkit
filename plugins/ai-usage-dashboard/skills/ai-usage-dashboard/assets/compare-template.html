@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>เปรียบเทียบ Credit จริง กับ Subscription</title>
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--ink:#222;--muted:#6b7280;--line:#e3e5e8;--accent:#f6821f;--accent2:#0051c3;--hover:#fafafa;--good:#1a7f4b;--bad:#c0392b}
+@media (prefers-color-scheme:dark){:root{--bg:#14161a;--card:#1d2026;--ink:#eceff3;--muted:#98a1ad;--line:#2d323a;--hover:#23272e;--accent2:#5b9bff;--good:#4cc38a;--bad:#ff7b6b}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "Noto Sans Thai","Sarabun",-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:var(--card);border-bottom:1px solid var(--line);padding:14px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{width:28px;height:28px;border-radius:6px;background:var(--accent)}
+header h1{font-size:1.1rem;margin:0;font-weight:600}
+header .sub{color:var(--muted);font-size:.85rem;margin-left:auto}
+main{max-width:1100px;margin:0 auto;padding:22px 20px 60px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-bottom:18px}
+.card,.panel{background:var(--card);border:1px solid var(--line);border-radius:6px}
+.card{padding:14px 16px}
+.card .k{color:var(--muted);font-size:.82rem}.card .v{font-size:1.6rem;font-weight:600;line-height:1.3}.card .s{color:var(--muted);font-size:.8rem}
+.good{color:var(--good)}.bad{color:var(--bad)}
+.panel{margin-bottom:18px}
+.panel h2{font-size:.98rem;margin:0;padding:12px 16px;border-bottom:1px solid var(--line);font-weight:600}
+.body{padding:14px 16px}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.plan label{display:block;font-size:.85rem;color:var(--muted)}
+.plan input{font:inherit;width:120px;padding:5px 8px;border:1px solid var(--line);border-radius:5px;background:var(--card);color:var(--ink)}
+.plan .h{font-weight:600;margin-bottom:4px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{padding:9px 14px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--muted);font-weight:500;background:var(--hover)}
+.chart{width:100%;height:auto;display:block}
+.legend{display:flex;gap:16px;font-size:.82rem;color:var(--muted);margin-top:8px;flex-wrap:wrap}
+.legend i{display:inline-block;width:12px;height:3px;margin-right:5px;vertical-align:middle}
+.note{color:var(--muted);font-size:.83rem}
+ul.note{padding-left:20px}
+@media print{body{background:#fff}.plan input{border:0}}
+</style>
+</head>
+<body>
+<header><div class="logo" aria-hidden="true"></div><h1>Credit จริง vs Subscription</h1><span class="sub">สร้างจาก ccusage · __GEN__</span></header>
+<main>
+<div class="panel"><h2>ตั้งค่าราคา subscription (แก้ได้)</h2><div class="body"><div class="plans" id="plans"></div>
+<p class="note" style="margin-bottom:0">“Credit จริง” ในหน้านี้ = ค่า token ที่ ccusage คำนวณที่อัตรา API (ถ้าจ่ายแบบ pay-per-token) ส่วน subscription = ค่าสมาชิกรายเดือนที่คิดตามสัดส่วนจำนวนวันของข้อมูล ราคาเริ่มต้นเป็นค่าสมมติ กรอกราคาจริงที่ได้รับเพื่อให้ผลถูกต้อง</p></div></div>
+<div class="cards" id="cards"></div>
+<div class="panel"><h2>สะสมตามวัน: ค่า API เทียบกับค่าสมาชิก (USD)</h2><div class="body"><svg class="chart" id="chart" viewBox="0 0 1100 320" role="img" aria-label="กราฟเส้นสะสมค่า API เทียบกับค่าสมาชิก"></svg><div class="legend" id="legend"></div></div></div>
+<div class="panel"><h2>เปรียบเทียบรายเครื่องมือ</h2><div class="tw"><table id="tools"></table></div></div>
+<div class="panel"><h2>รายเดือน</h2><div class="tw"><table id="months"></table></div></div>
+<div class="panel"><h2>ข้อควรรู้</h2><div class="body"><ul class="note" id="notes"></ul></div></div>
+</main>
+<script>
+const DATA=__DATA__;
+const PLANS=__PLANS__;
+const NOTES=__NOTES__;
+const usd=n=>(n<0?'-':'')+'$'+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const $=id=>document.getElementById(id);
+const COL={claude:'#f6821f',codex:'#0051c3'};
+const price={};
+for(const p of PLANS){price[p.key]=p.price;try{const v=localStorage.getItem('cmp-'+p.key);if(v!==null&&!isNaN(+v))price[p.key]=+v}catch(e){}}
+const DAYS=[...new Set(DATA.map(x=>x.d))].sort();
+const dayMs=d=>Date.parse(d+'T00:00:00Z');
+function span(key){const ds=[...new Set(DATA.filter(x=>x.a===key).map(x=>x.d))].sort();return ds.length?[ds[0],ds[ds.length-1]]:null}
+const daysBetween=(a,b)=>Math.round((dayMs(b)-dayMs(a))/864e5)+1;
+function plansUI(){
+  $('plans').innerHTML=PLANS.map(p=>`<div class="plan"><div class="h">${p.label}</div><label>ราคาต่อเดือน (USD) <input type="number" min="0" step="1" value="${price[p.key]}" data-k="${p.key}"></label><div class="note">${p.note}</div></div>`).join('');
+  $('plans').querySelectorAll('input').forEach(i=>i.oninput=()=>{price[i.dataset.k]=Math.max(0,+i.value||0);try{localStorage.setItem('cmp-'+i.dataset.k,String(price[i.dataset.k]))}catch(e){}render()});
+}
+function render(){
+  const per=PLANS.map(p=>{
+    const rows=DATA.filter(x=>x.a===p.key);const sp=span(p.key);
+    const api=rows.reduce((s,x)=>s+x.c,0);const nd=sp?daysBetween(sp[0],sp[1]):0;
+    const sub=price[p.key]*nd/30.4375;
+    return{p,api,sub,nd,sp,tokens:rows.reduce((s,x)=>s+x.i+x.o+x.cr+x.cw,0)};
+  });
+  const api=per.reduce((s,x)=>s+x.api,0),sub=per.reduce((s,x)=>s+x.sub,0);
+  $('cards').innerHTML=[
+    ['Credit จริง (ค่า API ที่ประมาณ)',usd(api),'ถ้าจ่ายตามจำนวน token'],
+    ['ค่า subscription ตามช่วงเวลา',usd(sub),'ราคาต่อเดือน × สัดส่วนจำนวนวัน'],
+    ['ผลต่าง',`<span class="${api>=sub?'good':'bad'}">${usd(api-sub)}</span>`,api>=sub?'subscription ถูกกว่าการจ่ายตาม token':'จ่ายตาม token ถูกกว่า subscription'],
+    ...(per.some(x=>x.p.payer==='self')?[['ที่คุณจ่ายเอง',usd(per.filter(x=>x.p.payer==='self').reduce((s,x)=>s+x.sub,0)),per.filter(x=>x.p.payer==='self').map(x=>x.p.short+' '+usd(x.api)+' ถ้าจ่ายตาม token').join(' · ')],['บริษัทจ่ายให้',usd(per.filter(x=>x.p.payer==='company').reduce((s,x)=>s+x.sub,0)),per.filter(x=>x.p.payer==='company').map(x=>x.p.short+' '+usd(x.api)+' ถ้าจ่ายตาม token').join(' · ')]]:[]),
+    ['คุ้มค่ากี่เท่า',sub>0?`<span class="${api>=sub?'good':'bad'}">${(api/sub).toFixed(1)}×</span>`:'-','Credit จริง ÷ ค่า subscription']
+  ].map(([k,v,s])=>`<div class="card"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join('');
+  $('tools').innerHTML=`<thead><tr><th>เครื่องมือ / แพ็กเกจ</th><th>ผู้จ่าย</th><th>ช่วงข้อมูล</th><th>Credit จริง</th><th>Subscription</th><th>ผลต่าง</th><th>คุ้มกี่เท่า</th></tr></thead><tbody>`+
+   per.map(x=>`<tr><td>${x.p.label}</td><td>${x.p.payer==='self'?'คุณจ่ายเอง':x.p.payer==='company'?'บริษัท':'-'}</td><td>${x.sp?x.sp[0]+' – '+x.sp[1]+' ('+x.nd+' วัน)':'-'}</td><td>${usd(x.api)}</td><td>${usd(x.sub)}</td><td class="${x.api>=x.sub?'good':'bad'}">${usd(x.api-x.sub)}</td><td>${x.sub>0?(x.api/x.sub).toFixed(1)+'×':'-'}</td></tr>`).join('')+
+   `<tr><td><b>รวม</b></td><td></td><td></td><td><b>${usd(api)}</b></td><td><b>${usd(sub)}</b></td><td class="${api>=sub?'good':'bad'}"><b>${usd(api-sub)}</b></td><td>${sub>0?(api/sub).toFixed(1)+'×':'-'}</td></tr></tbody>`;
+  // months
+  const months=[...new Set(DAYS.map(d=>d.slice(0,7)))];
+  $('months').innerHTML=`<thead><tr><th>เดือน</th>`+PLANS.map(p=>`<th>Credit จริง · ${p.short}</th><th>Sub · ${p.short}</th>`).join('')+`<th>Credit รวม</th><th>Sub รวม</th><th>คุ้มกี่เท่า</th></tr></thead><tbody>`+
+   months.map(m=>{let ta=0,ts=0;const cells=PLANS.map(p=>{const a=DATA.filter(x=>x.a===p.key&&x.d.startsWith(m)).reduce((s,x)=>s+x.c,0);const sp=span(p.key);let nd=0;if(sp){const f=m+'-01';const dt=new Date(Date.UTC(+m.slice(0,4),+m.slice(5),0)).toISOString().slice(0,10);const lo=sp[0]>f?sp[0]:f,hi=sp[1]<dt?sp[1]:dt;nd=lo<=hi?daysBetween(lo,hi):0}const s=price[p.key]*nd/30.4375;ta+=a;ts+=s;return`<td>${usd(a)}</td><td>${usd(s)}</td>`}).join('');return`<tr><td>${m}</td>${cells}<td>${usd(ta)}</td><td>${usd(ts)}</td><td>${ts>0?(ta/ts).toFixed(1)+'×':'-'}</td></tr>`}).join('')+'</tbody>';
+  // chart
+  const W=1100,H=320,L=64,B=34,T=10,R=14,pw=W-L-R,ph=H-T-B;
+  const cumApi=[],cumSub=[];let ca=0;
+  DAYS.forEach(d=>{ca+=DATA.filter(x=>x.d===d).reduce((s,x)=>s+x.c,0);cumApi.push(ca);
+    let cs=0;for(const p of PLANS){const sp=span(p.key);if(!sp||d<sp[0])continue;const e=d<sp[1]?d:sp[1];cs+=price[p.key]*daysBetween(sp[0],e)/30.4375}cumSub.push(cs)});
+  const mx=Math.max(1,...cumApi,...cumSub);const nice=Math.pow(10,Math.floor(Math.log10(mx)));const top=Math.ceil(mx/nice*2)/2*nice;
+  const X=i=>L+(DAYS.length>1?i/(DAYS.length-1):0)*pw,Y=v=>T+ph-v/top*ph;
+  let s='';for(let i=0;i<=4;i++){const y=T+ph-ph*i/4;s+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="currentColor" stroke-opacity=".12"/><text x="${L-6}" y="${y+4}" text-anchor="end" font-size="11" fill="currentColor" opacity=".6">$${(top*i/4).toFixed(0)}</text>`}
+  const path=a=>a.map((v,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)).join(' ');
+  s+=`<path d="${path(cumApi)}" fill="none" stroke="#f6821f" stroke-width="2.5"/><path d="${path(cumSub)}" fill="none" stroke="#0051c3" stroke-width="2.5" stroke-dasharray="7 5"/>`;
+  DAYS.forEach((d,i)=>{if(i%Math.ceil(DAYS.length/12)===0)s+=`<text x="${X(i)}" y="${H-12}" text-anchor="middle" font-size="10" fill="currentColor" opacity=".6">${d.slice(5)}</text>`});
+  $('chart').innerHTML=s;
+  $('legend').innerHTML='<span><i style="background:#f6821f"></i>Credit จริง (สะสม)</span><span><i style="background:#0051c3"></i>Subscription (สะสม, เส้นประ)</span>';
+  $('notes').innerHTML=NOTES.map(n=>`<li>${n}</li>`).join('');
+}
+plansUI();render();
+</script>
+</body>
+</html>

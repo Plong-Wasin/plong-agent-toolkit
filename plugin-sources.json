@@ -1,0 +1,403 @@
+{
+  "name": "plong-agent-toolkit",
+  "owner": {
+    "name": "plong"
+  },
+  "metadata": {
+    "description": "Shareable skills and hooks for Codex and Claude Code",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "commit",
+      "description": "Create a git commit with auto-generated message based on staged/unstaged changes, then optionally push",
+      "skills": [
+        "./skills/commit"
+      ],
+      "clients": [
+        "claude",
+        "codex"
+      ]
+    },
+    {
+      "name": "review-uncommit",
+      "description": "Expert code review of uncommitted git changes, output in Thai",
+      "skills": [
+        "./skills/review-uncommit"
+      ],
+      "clients": [
+        "claude",
+        "codex"
+      ]
+    },
+    {
+      "name": "review-branch",
+      "description": "Expert code review of branch diffs, output in Thai",
+      "skills": [
+        "./skills/review-branch"
+      ],
+      "clients": [
+        "claude",
+        "codex"
+      ]
+    },
+    {
+      "name": "kreuzberg",
+      "description": "Extract text from binary documents (DOCX, PDF, PPTX, XLSX) via Docker",
+      "skills": [
+        "./skills/kreuzberg"
+      ],
+      "clients": [
+        "claude",
+        "codex"
+      ]
+    },
+    {
+      "name": "phpstan-array-shapes",
+      "description": "Generate PHPStan PHPDoc array shape type annotations for PHP code — nested arrays, optional keys, type aliases, and best practices",
+      "skills": [
+        "./skills/phpstan-array-shapes"
+      ],
+      "clients": [
+        "claude",
+        "codex"
+      ]
+    },
+    {
+      "name": "client-html",
+      "description": "Create client-facing HTML proposals and workflow explanations with readable diagrams, concrete examples, and relevant trade-offs.",
+      "skills": [
+        "./skills/client-html"
+      ],
+      "clients": [
+        "claude",
+        "codex"
+      ]
+    },
+    {
+      "name": "management-talk",
+      "description": "Rewrite engineer-to-engineer content for engineering-org leadership (VPs, directors, PMs, release managers, execs in an engineering-savvy company) and shape it for the channel it is going to — JIRA comment, Slack post, async standup line, email, or meeting talking-points. Trigger when the user asks to write/rewrite for management / exec / VP / director / PM / release manager, asks for an \"executive summary / leadership update / status update\", says \"make this less technical / less jargony\", or asks for a slack / email / standup / meeting version of work originally written engineer-to-engineer.",
+      "skills": [
+        "./skills/management-talk"
+      ],
+      "clients": [
+        "claude",
+        "codex"
+      ]
+    },
+    {
+      "name": "scrutinize",
+      "description": "Outsider-perspective end-to-end review of a plan, PR, or code change. First questions intent and whether a simpler/more elegant approach would achieve the same goal, then traces the actual code path (not just the diff) to verify the change does what it claims. Output is concise, actionable, and every call carries its rationale. Trigger on /scrutinize and proactively whenever the user asks to review, audit, sanity-check, or get a second opinion on a plan, PR, diff, design doc, or proposed code change.",
+      "skills": [
+        "./skills/scrutinize"
+      ],
+      "clients": [
+        "claude",
+        "codex"
+      ]
+    },
+    {
+      "name": "laravel-test-filter",
+      "description": "Build the correct php artisan test command for running a subset of test classes/files with --parallel --processes=N — via folder path, --filter regex alternation, FQCN filters for duplicate class names, or a PHPUnit testsuite for recurring subsets",
+      "skills": [
+        "./skills/laravel-test-filter"
+      ],
+      "clients": [
+        "claude",
+        "codex"
+      ]
+    },
+    {
+      "name": "laravel-test-lock",
+      "description": "Shared host lock for local and Docker Laravel/PHPUnit/ParaTest/Pest runs. Queues the complete command through one runner and accepts legacy host flock commands using the same lock. Replaces php-test-lock-hook; also supports Codex hook input.",
+      "hooks": {
+        "PreToolUse": [
+          {
+            "matcher": "Bash",
+            "hooks": [
+              {
+                "type": "command",
+                "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hook-scripts/laravel-test-lock.sh\"",
+                "timeout": 10,
+                "statusMessage": "laravel-test-lock: Check shared PHP test lock"
+              }
+            ]
+          }
+        ]
+      },
+      "clients": [
+        "claude",
+        "codex"
+      ],
+      "files": [
+        "hook-scripts/laravel-test-lock.sh",
+        "hook-scripts/laravel-test-lock-check.py",
+        "hook-scripts/laravel-test-lock-run.sh",
+        "hook-scripts/php-artisan-test-lock.py",
+        "hook-scripts/_shell_command_scan.py"
+      ]
+    },
+    {
+      "name": "laravel-worktree-bootstrap",
+      "description": "Prepare a Laravel Git worktree with local vendor dependencies, .env.testing, and required ignored runtime files",
+      "skills": [
+        "./skills/laravel-worktree-bootstrap"
+      ],
+      "clients": [
+        "claude",
+        "codex"
+      ]
+    },
+    {
+      "name": "php-test-parallel-hook",
+      "description": "Block php artisan test Bash calls that omit --parallel --processes=<half of CPU cores>, so the agent adds it itself",
+      "hooks": {
+        "PreToolUse": [
+          {
+            "matcher": "Bash",
+            "hooks": [
+              {
+                "type": "command",
+                "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hook-scripts/php-artisan-test-parallel.sh\"",
+                "statusMessage": "php-test-parallel-hook: Check parallel test flags"
+              }
+            ]
+          }
+        ]
+      },
+      "clients": [
+        "claude",
+        "codex"
+      ],
+      "files": [
+        "hook-scripts/php-artisan-test-parallel.sh",
+        "hook-scripts/php-artisan-test-parallel-check.py",
+        "hook-scripts/_shell_command_scan.py"
+      ]
+    },
+    {
+      "name": "sudo-confirm-hook",
+      "description": "Force explicit approve/deny on any Bash command that invokes sudo",
+      "hooks": {
+        "PreToolUse": [
+          {
+            "matcher": "Bash",
+            "hooks": [
+              {
+                "type": "command",
+                "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hook-scripts/sudo-confirm.sh\""
+              }
+            ]
+          }
+        ]
+      },
+      "clients": [
+        "claude"
+      ],
+      "compatibilityNote": "Uses the Claude permission prompt and updatedInput protocol.",
+      "files": [
+        "hook-scripts/sudo-confirm.sh",
+        "hook-scripts/sudo-askpass.sh"
+      ]
+    },
+    {
+      "name": "usage-guard-hook",
+      "description": "Stop prompts and tool calls when a claude.ai plan limit (5-hour or weekly) reaches its threshold, so work never spills into paid extra-usage credits. Reads usage from the usage endpoint and, after the one-time usage-guard-statusline skill, from the statusline too",
+      "hooks": {
+        "UserPromptSubmit": [
+          {
+            "hooks": [
+              {
+                "type": "command",
+                "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hook-scripts/usage-guard.sh\"",
+                "timeout": 20
+              }
+            ]
+          }
+        ],
+        "PreToolUse": [
+          {
+            "matcher": "*",
+            "hooks": [
+              {
+                "type": "command",
+                "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hook-scripts/usage-guard.sh\"",
+                "timeout": 20
+              }
+            ]
+          }
+        ],
+        "SessionStart": [
+          {
+            "hooks": [
+              {
+                "type": "command",
+                "command": "bash \"${CLAUDE_PLUGIN_ROOT}/skills/usage-guard-statusline/scripts/setup.sh\" refresh",
+                "timeout": 10
+              }
+            ]
+          }
+        ]
+      },
+      "skills": [
+        "./skills/usage-guard-statusline"
+      ],
+      "clients": [
+        "claude"
+      ],
+      "compatibilityNote": "Reads Claude subscription credentials and statusline usage.",
+      "files": [
+        "hook-scripts/usage-guard.sh"
+      ]
+    },
+    {
+      "name": "account-fallback",
+      "description": "Linux Claude subscription account fallback with configurable priority, login, and separate 5-hour/weekly usage thresholds. Experimental credential adoption in running sessions.",
+      "skills": [
+        "./skills/claude-accounts"
+      ],
+      "clients": [
+        "claude"
+      ],
+      "hooks": {
+        "SessionStart": [
+          {
+            "hooks": [
+              {
+                "type": "command",
+                "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/skills/claude-accounts/scripts/accounts.py\" hook",
+                "timeout": 20
+              }
+            ]
+          }
+        ],
+        "UserPromptSubmit": [
+          {
+            "hooks": [
+              {
+                "type": "command",
+                "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/skills/claude-accounts/scripts/accounts.py\" hook",
+                "timeout": 20
+              }
+            ]
+          }
+        ],
+        "PreToolUse": [
+          {
+            "hooks": [
+              {
+                "type": "command",
+                "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/skills/claude-accounts/scripts/accounts.py\" hook",
+                "timeout": 20
+              }
+            ],
+            "matcher": "*"
+          }
+        ],
+        "PostToolUse": [
+          {
+            "hooks": [
+              {
+                "type": "command",
+                "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/skills/claude-accounts/scripts/accounts.py\" hook",
+                "timeout": 20
+              }
+            ],
+            "matcher": "*"
+          }
+        ],
+        "Stop": [
+          {
+            "hooks": [
+              {
+                "type": "command",
+                "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/skills/claude-accounts/scripts/accounts.py\" hook",
+                "timeout": 20
+              }
+            ]
+          }
+        ],
+        "StopFailure": [
+          {
+            "hooks": [
+              {
+                "type": "command",
+                "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/skills/claude-accounts/scripts/accounts.py\" hook",
+                "timeout": 20
+              }
+            ]
+          }
+        ]
+      },
+      "compatibilityNote": "Linux/WSL subscription file authentication. Uses Claude OAuth credentials and internal refresh/usage endpoints; live account adoption requires acceptance testing."
+    },
+    {
+      "name": "ai-usage-dashboard",
+      "description": "Collect AI token usage and cost with ccusage and render a standalone HTML dashboard with filters by source, tool, model and date range",
+      "skills": [
+        "./skills/ai-usage-dashboard"
+      ],
+      "clients": [
+        "claude",
+        "codex"
+      ]
+    },
+    {
+      "name": "api-flow-prototype",
+      "description": "Build self-contained clickable HTML prototypes that show UI state and the exact API calls each action would produce, with deferred-save or immediate-save flows and named scenarios",
+      "skills": [
+        "./skills/api-flow-prototype"
+      ],
+      "clients": [
+        "claude",
+        "codex"
+      ]
+    },
+    {
+      "name": "linux-mint-appimage",
+      "description": "Install and integrate downloaded AppImages on Linux Mint Cinnamon, including stable storage, desktop launchers, embedded icons, duplicate menu entries, and taskbar pinning",
+      "skills": [
+        "./skills/linux-mint-appimage"
+      ],
+      "clients": [
+        "claude",
+        "codex"
+      ]
+    },
+    {
+      "name": "linux-mint-app-hotkey",
+      "description": "Set up a Cinnamon custom keyboard shortcut on Linux Mint that launches an app, or focuses its window if already open — includes window class detection, keybinding-conflict checks, and the Cinnamon-reload workaround when a new shortcut doesn't fire",
+      "skills": [
+        "./skills/linux-mint-app-hotkey"
+      ],
+      "clients": [
+        "claude",
+        "codex"
+      ]
+    },
+    {
+      "name": "plong-statusline",
+      "description": "Plong's Claude Code statusline (model, effort, directory, git branch, context %, 5-hour / weekly plan usage), installed with /plong-statusline:plong-statusline",
+      "skills": [
+        "./skills/plong-statusline"
+      ],
+      "hooks": {
+        "SessionStart": [
+          {
+            "hooks": [
+              {
+                "type": "command",
+                "command": "bash \"${CLAUDE_PLUGIN_ROOT}/skills/plong-statusline/scripts/setup.sh\" refresh",
+                "timeout": 10
+              }
+            ]
+          }
+        ]
+      },
+      "clients": [
+        "claude"
+      ],
+      "compatibilityNote": "Installs the Claude Code statusline."
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "php-test-parallel-hook",
+  "description": "Block php artisan test Bash calls that omit --parallel --processes=<half of CPU cores>, so the agent adds it itself",
+  "author": {
+    "name": "plong"
+  },
+  "hooks": {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Bash",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hook-scripts/php-artisan-test-parallel.sh\"",
+              "statusMessage": "php-test-parallel-hook: Check parallel test flags"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "version": "1.0.0+2cf2eb6917a5",
+  "interface": {
+    "displayName": "php-test-parallel-hook",
+    "shortDescription": "Block php artisan test Bash calls that omit --parallel --processes=<half of CPU ",
+    "developerName": "plong",
+    "category": "Productivity",
+    "capabilities": []
+  }
+}

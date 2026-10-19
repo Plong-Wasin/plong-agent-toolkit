@@ -1,0 +1,32 @@
+{
+  "name": "laravel-test-lock",
+  "description": "Shared host lock for local and Docker Laravel/PHPUnit/ParaTest/Pest runs. Queues the complete command through one runner and accepts legacy host flock commands using the same lock. Replaces php-test-lock-hook; also supports Codex hook input.",
+  "author": {
+    "name": "plong"
+  },
+  "hooks": {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Bash",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hook-scripts/laravel-test-lock.sh\"",
+              "timeout": 10,
+              "statusMessage": "laravel-test-lock: Check shared PHP test lock"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "version": "1.0.0+5555d13a8d1f",
+  "interface": {
+    "displayName": "laravel-test-lock",
+    "shortDescription": "Shared host lock for local and Docker Laravel/PHPUnit/ParaTest/Pest runs. Queues",
+    "developerName": "plong",
+    "category": "Productivity",
+    "capabilities": []
+  }
+}

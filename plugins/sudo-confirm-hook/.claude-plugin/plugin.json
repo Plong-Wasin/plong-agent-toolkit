@@ -1,0 +1,21 @@
+{
+  "name": "sudo-confirm-hook",
+  "description": "Force explicit approve/deny on any Bash command that invokes sudo",
+  "author": {
+    "name": "plong"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hook-scripts/sudo-confirm.sh\""
+          }
+        ]
+      }
+    ]
+  },
+  "version": "1.0.0+24be81163608"
+}

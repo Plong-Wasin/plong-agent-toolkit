@@ -1,0 +1,50 @@
+{
+  "skill_name": "api-flow-prototype",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "เรากำลังออกแบบหน้าแก้ไขสินค้าของผู้ขาย (seller) ที่มีปุ่ม Save เดียว กด Save แล้วยิง 1 request เดียวที่รวม field ของ parent (name, price), และ variant sub-list (create/update/delete แยก array กัน) ไม่มีอะไรเกิดขึ้นจนกว่าจะกด Save ช่วยทำ prototype html ให้หน่อย อยากเห็นทั้งหน้าตา UI และว่ากด Save แต่ละครั้งยิง body หน้าตายังไง มีหลาย case ด้วย (สร้างใหม่, แก้ของเดิม, ลบแล้วเซฟ)",
+      "expected_output": "Single self-contained .html file with a mock product editor (name/price fields, a variant sub-list with add/edit/delete), a deferred-save model with a visibly distinct 'planned' panel (dashed) that updates live pre-Save and a 'fired' history panel that only populates after clicking Save, at least 3-4 named scenario buttons covering create-new/edit-existing/delete cases, a batch request body using explicit create/update/delete arrays (not a declarative full-list), and a rationale/decisions section at the bottom. File is NOT published as an artifact unless explicitly requested. No fetch()/real network calls anywhere.",
+      "files": [],
+      "expectations": [
+        "Single self-contained HTML with no fetch or real network calls",
+        "Deferred model visibly separates planned request from fired request history",
+        "Parent name and price plus variant create/edit/delete controls exist",
+        "At least three named scenarios cover create, edit, and delete/save",
+        "Batch body uses explicit variants_create, variants_update, and variants_delete arrays",
+        "Fired call detail shows a modeled response body, not just the request repeated back",
+        "Rationale or decisions section explains the contract"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I'm designing a checkout flow for an e-commerce cart. Items in the cart can be quantity-adjusted or removed, there's a promo code field, and a single 'Place order' button. Want to see exactly what hits the backend when someone clicks Place order vs. what happens while they're just fiddling with quantities before that. Can you mock this up as something clickable, not just a spec doc?",
+      "expected_output": "Single .html prototype with a cart mock UI (line items with qty +/-, remove, a promo code input), showing the deferred-save split (what would be sent if 'Place order' were clicked now, vs. what's actually been sent after clicking it), several scenario buttons (e.g. happy path order, remove an item then reduce another's qty, apply a promo code, an edit-then-navigate-away-without-submitting case proving nothing fires), and a plain-language rationale section. English is fine since the prompt is in English. File written locally, not auto-published as an artifact.",
+      "files": [],
+      "expectations": [
+        "Single self-contained HTML with no fetch or real network calls",
+        "Cart UI supports quantity adjustment, removal, promo code, and Place order",
+        "Deferred model visibly separates planned request from fired request history",
+        "At least four named scenarios cover happy path, removal/quantity, promo, and no-submit",
+        "Place order request body contains cart changes and promo data",
+        "Fired call detail shows a modeled response body, not just the request repeated back",
+        "Rationale explains why edits do not fire before Place order"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "ทำ prototype ให้หน่อย เป็นหน้า admin จัดการ FAQ ของเว็บ แต่ละ FAQ มีคำถาม/คำตอบ และแท็บหมวดหมู่ที่ลากสลับลำดับได้ อยากรู้ว่าตอนลากสลับลำดับ กับตอนแก้เนื้อหาคำถาม มันควรยิง API คนละแบบกันไหม ลองทำให้ดูเป็นตัวอย่างเดียวก่อนก็ได้ ไม่ต้องมีปุ่ม save แยก แก้ปุ๊บเซฟปุ๊บเลยก็ได้",
+      "expected_output": "Single .html prototype using the IMMEDIATE-save variant of the pattern (no Save/Discard bar since the user explicitly said autosave-on-edit) — each edit or reorder action fires its own call immediately, shown in a call log. Reordering FAQ categories must appear as a separate '_reorder' style call/field distinct from a content-edit '_update' call, matching the reorder-vs-update separation principle. At least 2-3 scenarios (edit a question's content, reorder categories, both together) demonstrating the two are visibly different calls. Should correctly adapt the deferred-save template down to an immediate model per the skill's Step 1 guidance rather than force the two-panel planned/fired split where it doesn't apply.",
+      "files": [],
+      "expectations": [
+        "Single self-contained HTML with no fetch or real network calls",
+        "Immediate-save model has no separate Save/Discard bar",
+        "FAQ question/answer editing fires an update call immediately",
+        "Category reorder fires a distinct reorder call with ordered IDs",
+        "At least two named scenarios demonstrate edit and reorder calls",
+        "Fired call detail shows a modeled response body, not just the request repeated back",
+        "Rationale explains separation of content update and reorder"
+      ]
+    }
+  ]
+}

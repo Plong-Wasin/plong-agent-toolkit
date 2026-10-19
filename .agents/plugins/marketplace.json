@@ -1,0 +1,152 @@
+{
+  "name": "plong-agent-toolkit",
+  "interface": {
+    "displayName": "Plong Agent Toolkit"
+  },
+  "plugins": [
+    {
+      "name": "commit",
+      "source": "./plugins/commit",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "review-uncommit",
+      "source": "./plugins/review-uncommit",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "review-branch",
+      "source": "./plugins/review-branch",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "kreuzberg",
+      "source": "./plugins/kreuzberg",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "phpstan-array-shapes",
+      "source": "./plugins/phpstan-array-shapes",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "client-html",
+      "source": "./plugins/client-html",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "management-talk",
+      "source": "./plugins/management-talk",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "scrutinize",
+      "source": "./plugins/scrutinize",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "laravel-test-filter",
+      "source": "./plugins/laravel-test-filter",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "laravel-test-lock",
+      "source": "./plugins/laravel-test-lock",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "laravel-worktree-bootstrap",
+      "source": "./plugins/laravel-worktree-bootstrap",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "php-test-parallel-hook",
+      "source": "./plugins/php-test-parallel-hook",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "ai-usage-dashboard",
+      "source": "./plugins/ai-usage-dashboard",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "api-flow-prototype",
+      "source": "./plugins/api-flow-prototype",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "linux-mint-appimage",
+      "source": "./plugins/linux-mint-appimage",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "linux-mint-app-hotkey",
+      "source": "./plugins/linux-mint-app-hotkey",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

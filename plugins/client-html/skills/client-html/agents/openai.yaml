@@ -1,0 +1,4 @@
+interface:
+  display_name: "Client HTML"
+  short_description: "Create clear HTML proposals for client review"
+  default_prompt: "Use $client-html to turn this discussion into a clear client-facing HTML document with readable diagrams and relevant trade-offs."

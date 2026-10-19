@@ -1,0 +1,8 @@
+{
+  "name": "api-flow-prototype",
+  "description": "Build self-contained clickable HTML prototypes that show UI state and the exact API calls each action would produce, with deferred-save or immediate-save flows and named scenarios",
+  "author": {
+    "name": "plong"
+  },
+  "version": "1.0.0+7676bb06282b"
+}

@@ -1,0 +1,8 @@
+{
+  "name": "ai-usage-dashboard",
+  "description": "Collect AI token usage and cost with ccusage and render a standalone HTML dashboard with filters by source, tool, model and date range",
+  "author": {
+    "name": "plong"
+  },
+  "version": "1.0.0+4718ba16e064"
+}

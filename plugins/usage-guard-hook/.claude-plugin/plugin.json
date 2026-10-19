@@ -1,0 +1,44 @@
+{
+  "name": "usage-guard-hook",
+  "description": "Stop prompts and tool calls when a claude.ai plan limit (5-hour or weekly) reaches its threshold, so work never spills into paid extra-usage credits. Reads usage from the usage endpoint and, after the one-time usage-guard-statusline skill, from the statusline too",
+  "author": {
+    "name": "plong"
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hook-scripts/usage-guard.sh\"",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hook-scripts/usage-guard.sh\"",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/skills/usage-guard-statusline/scripts/setup.sh\" refresh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "version": "1.0.0+1a8c3171627b"
+}

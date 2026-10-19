@@ -1,0 +1,78 @@
+{
+  "name": "account-fallback",
+  "description": "Linux Claude subscription account fallback with configurable priority, login, and separate 5-hour/weekly usage thresholds. Experimental credential adoption in running sessions.",
+  "author": {
+    "name": "plong"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/skills/claude-accounts/scripts/accounts.py\" hook",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/skills/claude-accounts/scripts/accounts.py\" hook",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/skills/claude-accounts/scripts/accounts.py\" hook",
+            "timeout": 20
+          }
+        ],
+        "matcher": "*"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/skills/claude-accounts/scripts/accounts.py\" hook",
+            "timeout": 20
+          }
+        ],
+        "matcher": "*"
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/skills/claude-accounts/scripts/accounts.py\" hook",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "StopFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/skills/claude-accounts/scripts/accounts.py\" hook",
+            "timeout": 20
+          }
+        ]
+      }
+    ]
+  },
+  "version": "1.0.0+4d474045aada"
+}

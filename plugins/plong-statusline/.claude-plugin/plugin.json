@@ -1,0 +1,21 @@
+{
+  "name": "plong-statusline",
+  "description": "Plong's Claude Code statusline (model, effort, directory, git branch, context %, 5-hour / weekly plan usage), installed with /plong-statusline:plong-statusline",
+  "author": {
+    "name": "plong"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/skills/plong-statusline/scripts/setup.sh\" refresh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "version": "1.0.0+5d6660c52dc3"
+}

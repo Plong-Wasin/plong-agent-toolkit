@@ -1,0 +1,15 @@
+{
+  "name": "client-html",
+  "description": "Create client-facing HTML proposals and workflow explanations with readable diagrams, concrete examples, and relevant trade-offs.",
+  "author": {
+    "name": "plong"
+  },
+  "version": "1.0.0+345adba54fcf",
+  "interface": {
+    "displayName": "client-html",
+    "shortDescription": "Create client-facing HTML proposals and workflow explanations with readable diag",
+    "developerName": "plong",
+    "category": "Productivity",
+    "capabilities": []
+  }
+}

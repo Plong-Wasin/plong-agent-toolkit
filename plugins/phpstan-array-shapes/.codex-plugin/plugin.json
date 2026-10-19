@@ -1,0 +1,15 @@
+{
+  "name": "phpstan-array-shapes",
+  "description": "Generate PHPStan PHPDoc array shape type annotations for PHP code — nested arrays, optional keys, type aliases, and best practices",
+  "author": {
+    "name": "plong"
+  },
+  "version": "1.0.0+5c5cb786a89d",
+  "interface": {
+    "displayName": "phpstan-array-shapes",
+    "shortDescription": "Generate PHPStan PHPDoc array shape type annotations for PHP code — nested array",
+    "developerName": "plong",
+    "category": "Productivity",
+    "capabilities": []
+  }
+}
