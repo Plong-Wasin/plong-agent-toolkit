@@ -409,6 +409,17 @@
         "claude",
         "codex"
       ]
+    },
+    {
+      "name": "build-cli",
+      "description": "Plong's approach to building a CLI client for an MCP server or API: shortcuts chosen from session history, modular TypeScript bundled to one file, multi-profile OAuth/token auth, black-box tests against a fake server, CI release branch, and a Claude Code + Codex skill",
+      "skills": [
+        "./skills/build-cli"
+      ],
+      "clients": [
+        "claude",
+        "codex"
+      ]
     }
   ]
 }

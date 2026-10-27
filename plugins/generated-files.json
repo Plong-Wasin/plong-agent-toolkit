@@ -6,6 +6,8 @@
   "plugins/ai-usage-dashboard/.codex-plugin/plugin.json",
   "plugins/api-flow-prototype/.claude-plugin/plugin.json",
   "plugins/api-flow-prototype/.codex-plugin/plugin.json",
+  "plugins/build-cli/.claude-plugin/plugin.json",
+  "plugins/build-cli/.codex-plugin/plugin.json",
   "plugins/client-html/.claude-plugin/plugin.json",
   "plugins/client-html/.codex-plugin/plugin.json",
   "plugins/commit/.claude-plugin/plugin.json",

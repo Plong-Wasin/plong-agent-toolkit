@@ -112,6 +112,11 @@
       "name": "multi-client-plugin",
       "source": "./plugins/multi-client-plugin",
       "description": "Build and maintain plugin marketplaces that install in both Claude Code and Codex CLI from one set of skill and hook sources: registry, generator, client differences, and a pre-publish privacy checklist"
+    },
+    {
+      "name": "build-cli",
+      "source": "./plugins/build-cli",
+      "description": "Plong's approach to building a CLI client for an MCP server or API: shortcuts chosen from session history, modular TypeScript bundled to one file, multi-profile OAuth/token auth, black-box tests against a fake server, CI release branch, and a Claude Code + Codex skill"
     }
   ]
 }
