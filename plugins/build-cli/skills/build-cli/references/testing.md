@@ -4,8 +4,8 @@ Black-box tests with Node's built-in runner: no test dependency, and they exerci
 
 ```
 test/
-  commands.test.ts        every command -> tool name and arguments sent
-  auth.test.ts            profiles, credential precedence, OAuth login and refresh
+  commands.test.ts        every command -> request sent (REST: method, path, query, body; MCP: tool and arguments)
+  auth.test.ts            profiles, token sources, auth check (MCP: also OAuth login and refresh)
   helpers/fake-server.ts  a fake backend on a random loopback port
   helpers/cli.ts          runs dist/<bin>.js as a child process
 ```
@@ -13,6 +13,19 @@ test/
 `package.json`: `"test": "pnpm build && node --test \"test/*.test.ts\""`. Test files are TypeScript executed by Node's type stripping (Node 22.18+; CI uses 24). Use erasable syntax only (no enums, no parameter properties) and `.ts` extensions in imports. Add `tsconfig.test.json` extending the main one with `allowImportingTsExtensions` and `erasableSyntaxOnly`, and make `typecheck` run both.
 
 ## The fake server (`helpers/fake-server.ts`)
+
+### REST fake (preferred transport)
+
+One `http.createServer` on port 0:
+
+- Records every request as `{ method, path, query (key -> string[]), body, token }` in `requests`, and answers 401 `{"detail":"Unauthorized"}` unless the bearer is in `validTokens`.
+- Default fixtures per route, shaped like the OpenAPI schema (export small builders such as `issue(id)` and `event()` so tests can create variations). Unknown routes return `404 {"detail":"Not found."}`, so a typo in a CLI path fails loudly instead of passing.
+- `reply(request)` override returns `{ status, body, headers }` or `undefined` to fall back to the defaults; it is how tests produce 403/404/429/400, a `Link` header for pagination, or a failure for one id in a bulk call.
+- `reset()` between tests, `close()` at the end (`closeAllConnections()` so the run does not hang on keep-alive).
+
+Reading `requests.at(-1)` after a run is the assertion for "the CLI sent exactly this". Prefer asserting the whole `query` object with `deepEqual` so an unexpected extra parameter is caught.
+
+### MCP fake
 
 One `http.createServer` on port 0 serving:
 
@@ -32,17 +45,21 @@ Because the fake verifies PKCE itself, a successful login test proves the CLI ge
 ## What to cover
 
 - Top level: version, help without a profile, unknown command and unknown flag exit 2, dash-leading flag values, a flag missing its value still errors.
-- Each command: the exact tool name and arguments, defaults from the profile, flag over env over profile, `--json` with and without `structuredContent`, tool error on stderr with exit 1, SSE reply, unreachable server message.
+- Each command: the exact request (REST) or tool name and arguments (MCP), defaults from the profile, flag over env over profile, `--json`, the table/summary output for one fixture, API error on stderr with exit 1 (401, 403, 404, 429, 400), unreachable server message (MCP also: SSE reply).
+- REST pagination: a `Link` header produces the `--cursor` footer, `--cursor` is forwarded, `--all` follows every page and stops when the server says there are no more.
+- Guarded writes: `--query` without `--yes` sends no write (assert no PUT/DELETE in `requests`) and exits 2; `delete` without `--yes` sends nothing; ids and `--query` together exit 2.
+- Raw command: path normalisation, `key=value` to query, `--data` from argument and stdin, bad method, bad JSON, missing path.
 - Id parsing: `123`, `#123`, URL accepted; `abc123`, `12abc`, `1.5`, empty rejected with exit 2 and no request sent.
-- Bulk writes: one call per id, one session, failure in the middle keeps going and exits 1.
+- Bulk writes: one call per id (MCP: one session), a failure in the middle keeps going, is reported as `#id: ...`, and exits 1.
 - Profiles: set from stdin and `--token`, `Bearer ` stripped, URL normalised, mode 600, masked status, use, logout moves the default, unknown profile lists the known ones.
-- Credentials: `-p` and `<BIN>_PROFILE` selection, env token beats profile token, rejected static token is not refreshed, OAuth refresh on 401 retries and saves rotated tokens, refused refresh asks to log in again.
-- Login: pasted callback URL, loopback redirect, forged `state`, `error=access_denied`, re-login keeps URL and replaces a static token, missing `--url` exits 2.
+- Credentials: `-p` and `<BIN>_PROFILE` selection, env token beats profile token, env URL + env token work with no profile, a profile without a token says how to add one, a rejected token is not retried.
+- REST `auth check`: succeeds and lists what the token sees; a rejected token exits 1 with the hint.
+- MCP only: OAuth refresh on 401 retries and saves rotated tokens, refused refresh asks to log in again; login with a pasted callback URL, loopback redirect, forged `state`, `error=access_denied`, re-login keeps URL and replaces a static token, missing `--url` exits 2.
 
 ## Rules
 
-- Always pass `--manual` in login tests. Without it the CLI tries to open a real browser.
+- MCP only: always pass `--manual` in login tests. Without it the CLI tries to open a real browser.
 - Do not stub inside the CLI; extend the fake server instead, so tests keep covering the real transport.
 - Run the whole suite twice after writing it; a flaky test usually means a missing wait on stderr or a shared port.
 - Set `TMPDIR` somewhere disposable when an agent runs the tests.
-- Before trusting a green run against a real service, remember what the fake cannot know: real response text, session requirements and OAuth quirks. Say so when reporting, and have the user sign in once to confirm.
+- Before trusting a green run against a real service, remember what the fake cannot know: real response shapes and fields, the pagination header format, which token scopes writes need, and (MCP) session requirements and OAuth quirks. Say so when reporting, and have the user create a token or sign in once and try a read command to confirm.

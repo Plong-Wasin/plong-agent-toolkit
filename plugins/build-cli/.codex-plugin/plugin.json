@@ -4,7 +4,7 @@
   "author": {
     "name": "plong"
   },
-  "version": "1.0.0+868d4e2a5f8c",
+  "version": "1.0.0+404dd4b72a9d",
   "interface": {
     "displayName": "build-cli",
     "shortDescription": "Plong's approach to building a CLI client for an MCP server or API: shortcuts ch",
