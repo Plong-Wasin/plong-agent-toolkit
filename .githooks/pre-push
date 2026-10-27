@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Fail the push when generated plugin metadata drifts from plugin-sources.json and the skill files.
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+python3 scripts/sync-plugins.py --check

@@ -39,4 +39,5 @@ Plugin files live in `plugins/<name>/`; metadata is generated from `plugin-sourc
 ```bash
 python3 scripts/sync-plugins.py          # regenerate manifests and marketplaces
 python3 -m unittest discover -s tests    # verify packaging and generated output
+git config core.hooksPath .githooks      # once per clone: pre-push runs sync-plugins.py --check
 ```
