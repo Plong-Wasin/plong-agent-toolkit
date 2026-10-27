@@ -7,7 +7,9 @@
 # and passes the input on to the statusline command that was there before.
 input=$(cat)
 
-SNAP_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/claude-usage-guard/statusline"
+# Per-profile directory, matching usage-guard.sh.
+PROFILE_KEY=$(printf '%s' "${CLAUDE_CONFIG_DIR:-$HOME/.claude}" | cksum | cut -d' ' -f1)
+SNAP_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/claude-usage-guard/$PROFILE_KEY/statusline"
 STATE_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/claude-usage-guard"
 mkdir -p "$SNAP_DIR"
 
@@ -25,6 +27,7 @@ fi
 # Snapshots of sessions untouched for a day are of no further use.
 find "$SNAP_DIR" -maxdepth 1 -name '*.json' -mmin +1440 -delete 2>/dev/null
 
-inner=$(cat "$STATE_DIR/inner-statusline" 2>/dev/null)
+# Per-profile inner statusline; the unsuffixed file is the pre-profile fallback.
+inner=$(cat "$STATE_DIR/inner-statusline.$PROFILE_KEY" 2>/dev/null || cat "$STATE_DIR/inner-statusline" 2>/dev/null)
 [ -n "$inner" ] && printf '%s' "$input" | bash -c "$inner"
 exit 0

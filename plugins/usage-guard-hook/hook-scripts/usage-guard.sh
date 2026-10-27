@@ -18,6 +18,9 @@
 # on other failures the next attempt waits too, so a broken network never adds
 # a curl timeout to every tool call.
 #
+# Each Claude profile (CLAUDE_CONFIG_DIR) keeps its own cache, lock, backoff and
+# snapshots, since profiles are usually different accounts with different limits.
+#
 # Tunables (environment variables, e.g. via "env" in ~/.claude/settings.json):
 #   CLAUDE_USAGE_GUARD_SESSION_THRESHOLD  block 5-hour limit at this %  (default 93, decimals ok)
 #   CLAUDE_USAGE_GUARD_WEEKLY_THRESHOLD   block weekly limits at this % (default 95, decimals ok)
@@ -47,7 +50,10 @@ STATUSLINE_FRESH="${CLAUDE_USAGE_GUARD_STATUSLINE_FRESH:-120}"
 MAX_STALE="${CLAUDE_USAGE_GUARD_MAX_STALE:-600}"
 FAIL_CLOSED="${CLAUDE_USAGE_GUARD_FAIL_CLOSED:-0}"
 
-CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/claude-usage-guard"
+# One cache per profile: each CLAUDE_CONFIG_DIR can be a different account, and
+# its usage, backoff and statusline snapshots must not leak into another's.
+PROFILE_KEY=$(printf '%s' "${CLAUDE_CONFIG_DIR:-$HOME/.claude}" | cksum | cut -d' ' -f1)
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/claude-usage-guard/$PROFILE_KEY"
 CACHE="$CACHE_DIR/usage.json"
 SNAP_DIR="$CACHE_DIR/statusline"  # one snapshot per session, written by statusline-tee.sh
 BACKOFF="$CACHE_DIR/backoff"   # "<retry-at epoch> <consecutive failures> <reason>"

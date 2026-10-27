@@ -13,10 +13,15 @@ SKILL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 SRC="$SKILL_DIR/scripts/statusline-tee.sh"
 STATE_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/claude-usage-guard"
 WRAPPER="$STATE_DIR/statusline-tee.sh"
-INNER="$STATE_DIR/inner-statusline"
 SETTINGS="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/settings.json"
-SNAP_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/claude-usage-guard/statusline"
+PROFILE_KEY=$(printf '%s' "${CLAUDE_CONFIG_DIR:-$HOME/.claude}" | cksum | cut -d' ' -f1)
+SNAP_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/claude-usage-guard/$PROFILE_KEY/statusline"
 WRAP_CMD="bash $WRAPPER"
+# The wrapper script is shared; the inner statusline belongs to one profile.
+INNER="$STATE_DIR/inner-statusline.$PROFILE_KEY"
+LEGACY_INNER="$STATE_DIR/inner-statusline"
+
+inner_cmd() { cat "$INNER" 2>/dev/null || cat "$LEGACY_INNER" 2>/dev/null || true; }
 
 current_cmd() {
   [ -f "$SETTINGS" ] || { echo ""; return; }
@@ -46,7 +51,7 @@ case "${1:-status}" in
     cur=$(current_cmd)
     if [ "$cur" = "$WRAP_CMD" ]; then
       echo "already installed; wrapper refreshed"
-      echo "inner statusline: $(cat "$INNER" 2>/dev/null || echo '(none)')"
+      echo "inner statusline: $(inner_cmd)"
       exit 0
     fi
     printf '%s' "$cur" > "$INNER"
@@ -63,13 +68,15 @@ case "${1:-status}" in
       echo "not installed (statusLine.command is: ${cur:-(none)}); nothing changed"
       exit 0
     fi
-    inner=$(cat "$INNER" 2>/dev/null || true)
+    inner=$(inner_cmd)
     if [ -n "$inner" ]; then
       write_settings --arg cmd "$inner" '.statusLine.command = $cmd'
     else
       write_settings 'del(.statusLine)'
     fi
-    rm -f "$WRAPPER" "$INNER"
+    rm -f "$INNER"
+    # Other profiles may still use the shared wrapper.
+    compgen -G "$STATE_DIR/inner-statusline.*" >/dev/null || rm -f "$WRAPPER"
     rm -rf "$SNAP_DIR"
     echo "uninstalled; statusLine.command restored to: ${inner:-(removed)}"
     ;;
@@ -84,7 +91,7 @@ case "${1:-status}" in
     cur=$(current_cmd)
     if [ "$cur" = "$WRAP_CMD" ]; then
       echo "installed"
-      echo "inner statusline: $(cat "$INNER" 2>/dev/null || echo '(none)')"
+      echo "inner statusline: $(inner_cmd)"
     else
       echo "not installed (statusLine.command is: ${cur:-(none)})"
     fi

@@ -16,10 +16,16 @@ SKILL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 SRC="$SKILL_DIR/scripts/statusline.sh"
 STATE_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/plong-statusline"
 TARGET="$STATE_DIR/statusline.sh"
-PREVIOUS="$STATE_DIR/previous-command"
+PROFILE_KEY=$(printf '%s' "${CLAUDE_CONFIG_DIR:-$HOME/.claude}" | cksum | cut -d' ' -f1)
+# The script is shared; what it replaced is remembered per profile.
+PREVIOUS="$STATE_DIR/previous-command.$PROFILE_KEY"
 CMD="bash $TARGET"
 SETTINGS="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/settings.json"
-GUARD_INNER="${XDG_DATA_HOME:-$HOME/.local/share}/claude-usage-guard/inner-statusline"
+GUARD_STATE="${XDG_DATA_HOME:-$HOME/.local/share}/claude-usage-guard"
+GUARD_INNER="$GUARD_STATE/inner-statusline.$PROFILE_KEY"
+GUARD_LEGACY_INNER="$GUARD_STATE/inner-statusline"
+
+guard_inner_cmd() { cat "$GUARD_INNER" 2>/dev/null || cat "$GUARD_LEGACY_INNER" 2>/dev/null || true; }
 
 current_cmd() {
   [ -f "$SETTINGS" ] || { echo ""; return; }
@@ -49,7 +55,7 @@ copy_script() {
 }
 
 installed_where() {
-  if guard_wrapped && [ "$(cat "$GUARD_INNER" 2>/dev/null)" = "$CMD" ]; then
+  if guard_wrapped && [ "$(guard_inner_cmd)" = "$CMD" ]; then
     echo "inside the usage-guard wrapper"
   elif [ "$(current_cmd)" = "$CMD" ]; then
     echo "as statusLine.command"
@@ -65,7 +71,7 @@ case "${1:-status}" in
       exit 0
     fi
     if guard_wrapped; then
-      cat "$GUARD_INNER" 2>/dev/null > "$PREVIOUS" || : > "$PREVIOUS"
+      guard_inner_cmd > "$PREVIOUS"
       printf '%s' "$CMD" > "$GUARD_INNER"
       echo "installed inside the usage-guard wrapper (statusLine.command unchanged)"
     else
