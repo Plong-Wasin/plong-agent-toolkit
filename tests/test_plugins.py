@@ -82,7 +82,7 @@ class PluginPackages(unittest.TestCase):
                     if client == "codex":
                         self.assertFalse((folder / "plugin.json").exists(), "Root manifests hide compatibility hooks in Codex 0.162.1")
                     self.assertEqual(manifest["name"], entry["name"])
-                    self.assertTrue(manifest["version"].startswith("1.0.0+"))
+                    self.assertNotIn("version", manifest)
                     source = next(plugin for plugin in registry["plugins"] if plugin["name"] == entry["name"])
                     for skill in source.get("skills", []):
                         self.assertTrue((folder / "skills" / Path(skill).name / "SKILL.md").is_file())
@@ -129,20 +129,21 @@ class PluginPackages(unittest.TestCase):
                     self.assertEqual(result.returncode, 0, result.stderr)
                     self.assertFalse(result.stdout.strip())
 
-    def test_generator_detects_modified_resources_and_refuses_external_paths(self):
+    def test_generator_ignores_source_edits_and_refuses_external_paths(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             skill = root / "plugins/probe/skills/probe"
             skill.mkdir(parents=True)
             (skill / "SKILL.md").write_text("---\nname: probe\ndescription: Probe\n---\nHello.\n")
-            source = {"name": "probe", "owner": {"name": "test"}, "metadata": {"version": "1.0.0"}, "plugins": [
+            source = {"name": "probe", "owner": {"name": "test"}, "metadata": {}, "plugins": [
                 {"name": "probe", "description": "Probe", "skills": ["./skills/probe"], "clients": ["claude", "codex"]},
             ]}
             (root / "plugin-sources.json").write_text(json.dumps(source))
             GENERATOR["sync"](root)
             self.assertEqual(GENERATOR["sync"](root, check=True), [])
             (skill / "SKILL.md").write_text("Changed source")
-            self.assertTrue(GENERATOR["sync"](root, check=True))
+            # Manifests carry no content hash, so source edits need no regeneration.
+            self.assertEqual(GENERATOR["sync"](root, check=True), [])
             # Removing a client removes its generated manifest without touching
             # the editable source or the other client's plugin package.
             source["plugins"][0]["clients"] = ["claude"]
@@ -164,7 +165,7 @@ class PluginPackages(unittest.TestCase):
             skill.mkdir(parents=True)
             text = "---\nname: probe\ndescription: Probe\n---\nEditable source.\n"
             (skill / "SKILL.md").write_text(text)
-            registry = {"name": "probe", "owner": {"name": "test"}, "metadata": {"version": "1.0.0"}, "plugins": [
+            registry = {"name": "probe", "owner": {"name": "test"}, "metadata": {}, "plugins": [
                 {"name": "probe", "description": "Probe", "skills": ["./skills/probe"], "clients": ["claude"]},
             ]}
             (root / "plugin-sources.json").write_text(json.dumps(registry))

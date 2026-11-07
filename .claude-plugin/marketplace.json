@@ -4,8 +4,7 @@
     "name": "plong"
   },
   "metadata": {
-    "description": "Shareable skills and hooks for Codex and Claude Code",
-    "version": "1.0.0"
+    "description": "Shareable skills and hooks for Codex and Claude Code"
   },
   "plugins": [
     {
