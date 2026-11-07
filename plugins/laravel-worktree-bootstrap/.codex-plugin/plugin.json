@@ -4,7 +4,6 @@
   "author": {
     "name": "plong"
   },
-  "version": "1.0.0+ad2b7aacd72d",
   "interface": {
     "displayName": "laravel-worktree-bootstrap",
     "shortDescription": "Prepare a Laravel Git worktree with local vendor dependencies, .env.testing, and",

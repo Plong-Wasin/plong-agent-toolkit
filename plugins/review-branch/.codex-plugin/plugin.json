@@ -4,7 +4,6 @@
   "author": {
     "name": "plong"
   },
-  "version": "1.0.0+17cb7c926e60",
   "interface": {
     "displayName": "review-branch",
     "shortDescription": "Expert code review of branch diffs, output in Thai",

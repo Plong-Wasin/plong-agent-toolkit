@@ -4,7 +4,6 @@
   "author": {
     "name": "plong"
   },
-  "version": "1.0.0+dc3e0aefe65b",
   "interface": {
     "displayName": "multi-client-plugin",
     "shortDescription": "Build and maintain plugin marketplaces that install in both Claude Code and Code",

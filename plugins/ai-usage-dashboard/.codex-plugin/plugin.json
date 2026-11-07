@@ -4,7 +4,6 @@
   "author": {
     "name": "plong"
   },
-  "version": "1.0.0+4718ba16e064",
   "interface": {
     "displayName": "ai-usage-dashboard",
     "shortDescription": "Collect AI token usage and cost with ccusage and render a standalone HTML dashbo",

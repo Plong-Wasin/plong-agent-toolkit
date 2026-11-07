@@ -4,7 +4,6 @@
   "author": {
     "name": "plong"
   },
-  "version": "1.0.0+af4236695672",
   "interface": {
     "displayName": "laravel-test-filter",
     "shortDescription": "Build the correct php artisan test command for running a subset of test classes/",

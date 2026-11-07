@@ -4,7 +4,6 @@
   "author": {
     "name": "plong"
   },
-  "version": "1.0.0+55e15f5a68f8",
   "interface": {
     "displayName": "review-uncommit",
     "shortDescription": "Expert code review of uncommitted git changes, output in Thai",

@@ -4,7 +4,6 @@
   "author": {
     "name": "plong"
   },
-  "version": "1.0.0+93d163013b48",
   "interface": {
     "displayName": "management-talk",
     "shortDescription": "Rewrite engineer-to-engineer content for engineering-org leadership (VPs, direct",

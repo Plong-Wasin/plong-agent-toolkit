@@ -20,7 +20,6 @@
       ]
     }
   },
-  "version": "1.0.0+2cf2eb6917a5",
   "interface": {
     "displayName": "php-test-parallel-hook",
     "shortDescription": "Block php artisan test Bash calls that omit --parallel --processes=<half of CPU ",

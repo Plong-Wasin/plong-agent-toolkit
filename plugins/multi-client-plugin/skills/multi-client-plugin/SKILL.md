@@ -60,8 +60,8 @@ link skills globally would otherwise see duplicates.
   that points at plugins hosted elsewhere. A private source only installs for people whose git
   credentials can read it, and its name, description and URL are visible to anyone who can
   read the marketplace.
-- **The generated version contains a content hash**, so edited sources invalidate client caches.
-  Do not set versions by hand.
+- **Generated plugin manifests carry no `version`**, so clients key their cache on the source
+  revision and a pushed edit refreshes the install. Do not add a `version` by hand.
 - **Codex hooks are untrusted on first install.** That is expected; test hook commands by
   piping synthetic JSON into them instead of waiting for trust.
 

@@ -4,7 +4,6 @@
   "author": {
     "name": "plong"
   },
-  "version": "1.0.0+79f907fcc085",
   "interface": {
     "displayName": "scrutinize",
     "shortDescription": "Outsider-perspective end-to-end review of a plan, PR, or code change. First ques",

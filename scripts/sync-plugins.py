@@ -2,7 +2,6 @@
 """Generate Codex/Claude metadata for packages whose files live in plugins/."""
 
 import argparse
-import hashlib
 import json
 from pathlib import Path
 import re
@@ -112,13 +111,8 @@ def render(root):
         if not sources:
             raise ValueError(f"Plugin has no bundled resources: {plugin_name}")
 
-        # Change the installed version when source content changes so clients do
-        # not reuse a stale cache under the old version number.
-        digest = hashlib.sha256(b"codex-compatibility-manifest-v1\n" + json_bytes(manifest))
-        for path, (content, mode) in sorted(sources.items()):
-            digest.update(json_bytes([path, mode, len(content)]))
-            digest.update(content)
-        manifest["version"] = registry["metadata"]["version"] + "+" + digest.hexdigest()[:12]
+        # Manifests carry no version: both clients then key the install cache on
+        # the source revision, so an edit refreshes the installed copy by itself.
 
         for client in clients:
             client_manifest = dict(manifest)

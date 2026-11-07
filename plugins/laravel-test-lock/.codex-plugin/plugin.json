@@ -21,7 +21,6 @@
       ]
     }
   },
-  "version": "1.0.0+5555d13a8d1f",
   "interface": {
     "displayName": "laravel-test-lock",
     "shortDescription": "Shared host lock for local and Docker Laravel/PHPUnit/ParaTest/Pest runs. Queues",

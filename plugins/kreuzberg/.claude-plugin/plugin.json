@@ -3,6 +3,5 @@
   "description": "Extract text from binary documents (DOCX, PDF, PPTX, XLSX) via Docker",
   "author": {
     "name": "plong"
-  },
-  "version": "1.0.0+2b42238912c2"
+  }
 }

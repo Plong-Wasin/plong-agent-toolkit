@@ -4,7 +4,6 @@
   "author": {
     "name": "plong"
   },
-  "version": "1.0.0+3d4a049a305f",
   "interface": {
     "displayName": "commit",
     "shortDescription": "Create a git commit with auto-generated message based on staged/unstaged changes",

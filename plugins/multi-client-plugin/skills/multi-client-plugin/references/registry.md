@@ -9,8 +9,8 @@
 }
 ```
 
-`name` is the marketplace name (used in `plugin@name`). `metadata.version` is the prefix of
-every generated plugin version (`1.0.0+<content hash>`).
+`name` is the marketplace name (used in `plugin@name`). `metadata.version` versions the
+marketplace only; generated plugin manifests carry no `version`.
 
 ## Local plugin (files in this repo)
 

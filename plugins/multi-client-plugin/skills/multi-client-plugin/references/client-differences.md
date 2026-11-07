@@ -35,6 +35,7 @@ and the tests assert it is absent.
 
 ## Caches
 
-Both clients cache installed plugins by version. Editing a repo does not update an installed
-copy; the content hash in the generated version string is what forces a refresh. After a
+Both clients cache installed plugins. Editing a repo does not update an installed copy; with
+no `version` in the manifest the cache follows the source revision, so a pushed commit forces
+a refresh. After a
 marketplace refresh users must update or reinstall the plugin and open a new session.
