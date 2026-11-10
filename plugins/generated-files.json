@@ -33,12 +33,7 @@
   "plugins/phpstan-array-shapes/.claude-plugin/plugin.json",
   "plugins/phpstan-array-shapes/.codex-plugin/plugin.json",
   "plugins/plong-statusline/.claude-plugin/plugin.json",
-  "plugins/review-branch/.claude-plugin/plugin.json",
-  "plugins/review-branch/.codex-plugin/plugin.json",
-  "plugins/review-uncommit/.claude-plugin/plugin.json",
-  "plugins/review-uncommit/.codex-plugin/plugin.json",
   "plugins/scrutinize/.claude-plugin/plugin.json",
   "plugins/scrutinize/.codex-plugin/plugin.json",
-  "plugins/sudo-confirm-hook/.claude-plugin/plugin.json",
   "plugins/usage-guard-hook/.claude-plugin/plugin.json"
 ]

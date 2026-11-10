@@ -13,16 +13,6 @@
       "description": "Create a git commit with auto-generated message based on staged/unstaged changes, then optionally push"
     },
     {
-      "name": "review-uncommit",
-      "source": "./plugins/review-uncommit",
-      "description": "Expert code review of uncommitted git changes, output in Thai"
-    },
-    {
-      "name": "review-branch",
-      "source": "./plugins/review-branch",
-      "description": "Expert code review of branch diffs, output in Thai"
-    },
-    {
       "name": "kreuzberg",
       "source": "./plugins/kreuzberg",
       "description": "Extract text from binary documents (DOCX, PDF, PPTX, XLSX) via Docker"
@@ -66,11 +56,6 @@
       "name": "php-test-parallel-hook",
       "source": "./plugins/php-test-parallel-hook",
       "description": "Block php artisan test Bash calls that omit --parallel --processes=<half of CPU cores>, so the agent adds it itself"
-    },
-    {
-      "name": "sudo-confirm-hook",
-      "source": "./plugins/sudo-confirm-hook",
-      "description": "Force explicit approve/deny on any Bash command that invokes sudo"
     },
     {
       "name": "usage-guard-hook",

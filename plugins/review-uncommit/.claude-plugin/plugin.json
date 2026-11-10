@@ -1,7 +1,0 @@
-{
-  "name": "review-uncommit",
-  "description": "Expert code review of uncommitted git changes, output in Thai",
-  "author": {
-    "name": "plong"
-  }
-}

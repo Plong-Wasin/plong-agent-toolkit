@@ -14,24 +14,6 @@
       "category": "Productivity"
     },
     {
-      "name": "review-uncommit",
-      "source": "./plugins/review-uncommit",
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Productivity"
-    },
-    {
-      "name": "review-branch",
-      "source": "./plugins/review-branch",
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Productivity"
-    },
-    {
       "name": "kreuzberg",
       "source": "./plugins/kreuzberg",
       "policy": {

@@ -19,28 +19,6 @@
       ]
     },
     {
-      "name": "review-uncommit",
-      "description": "Expert code review of uncommitted git changes, output in Thai",
-      "skills": [
-        "./skills/review-uncommit"
-      ],
-      "clients": [
-        "claude",
-        "codex"
-      ]
-    },
-    {
-      "name": "review-branch",
-      "description": "Expert code review of branch diffs, output in Thai",
-      "skills": [
-        "./skills/review-branch"
-      ],
-      "clients": [
-        "claude",
-        "codex"
-      ]
-    },
-    {
       "name": "kreuzberg",
       "description": "Extract text from binary documents (DOCX, PDF, PPTX, XLSX) via Docker",
       "skills": [
@@ -172,31 +150,6 @@
         "hook-scripts/php-artisan-test-parallel.sh",
         "hook-scripts/php-artisan-test-parallel-check.py",
         "hook-scripts/_shell_command_scan.py"
-      ]
-    },
-    {
-      "name": "sudo-confirm-hook",
-      "description": "Force explicit approve/deny on any Bash command that invokes sudo",
-      "hooks": {
-        "PreToolUse": [
-          {
-            "matcher": "Bash",
-            "hooks": [
-              {
-                "type": "command",
-                "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hook-scripts/sudo-confirm.sh\""
-              }
-            ]
-          }
-        ]
-      },
-      "clients": [
-        "claude"
-      ],
-      "compatibilityNote": "Uses the Claude permission prompt and updatedInput protocol.",
-      "files": [
-        "hook-scripts/sudo-confirm.sh",
-        "hook-scripts/sudo-askpass.sh"
       ]
     },
     {
