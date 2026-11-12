@@ -11,6 +11,9 @@ Produce an HTML file the user can share with a client without having to explain 
 
 - Use the conversation to identify the reader, requested outcome, current behavior, proposed changes, constraints, and decisions still needed. Ask only for missing information that materially changes the deliverable.
 - Distinguish current implementation, intended business rules, and proposed behavior. If reviewing code, trace the values used in the relevant calculation or decision, not merely function order. Executing a discount step first does not prove later checks use the discounted amount. A discovered bug describes implementation, not necessarily the agreed requirement.
+- Fix the reader before writing: the default reader is a non-technical client or PM; the user may name a developer instead. Keep that choice for the whole document.
+  - Non-technical reader (default): no field names, column values, code identifiers, or system jargon (write "not published", not `publish_status = 0`). Build most of the content from tables and diagrams, with at most a short paragraph around each. Every number traces to a query result or file from this session.
+  - Developer reader: field names, ids, and code paths are welcome. Keep the tables and diagrams so the page stays quick to read.
 - Keep evidence and code paths in the user-facing handoff when useful; keep internal debugging details out of the client artifact unless requested. Qualify claims that were inspected but not executed.
 - When minimal code change is a stated priority, recommend reusing existing behavior where it meets the requirement. Explain the remaining necessary work without inventing schedules, costs, or guarantees.
 
@@ -34,6 +37,10 @@ Lead with what the client gains and the proposed approach. Add only sections tha
 
 For existing documents, edit the latest agreed file and preserve accepted content. Apply requested deletions precisely, then repair orphaned references, numbering, table structure, or conclusions that depended on the removed text. Honor excluded topics across the document without turning those exclusions into permanent rules for unrelated future documents.
 
-Before delivery, check HTML structure, navigation targets, example arithmetic, current/proposed labels, and consistency with the latest user edits. Check that diagrams and assets have no unintended network dependency. If browser rendering is available, inspect diagram legibility and narrow-screen layout; describe verification accurately if only static checks were possible.
+Before delivery, check HTML structure, navigation targets, example arithmetic, current/proposed labels, and consistency with the latest user edits. Check that diagrams and assets have no unintended network dependency.
+
+A page with a diagram is done when you have looked at a rendered screenshot of it, at desktop and phone width, and confirmed every label sits inside its box, no text overlaps, and every arrow reaches its target. Parsing the markup or checking the arithmetic does not show this; clipped or overflowing text only appears when rendered.
+
+Render with whatever the session offers, in this order: a browser skill or MCP (Playwright, Orca browser), then a headless browser on the host (`chromium --headless --screenshot`, `google-chrome --headless --screenshot`). Open the screenshot with the image reader. With no renderer at all, say plainly in the handoff that the diagram was not viewed, and ask the user to check it before it goes to the client. Keep diagram box sizes derived from their content (rows × row height) so a static review can still catch a mismatch.
 
 Return a clickable link to the finished file and a short description of the material change. If copying the final artifact, verify that the delivered copy matches the source.
