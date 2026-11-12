@@ -20,6 +20,7 @@ LOCK_FILE = os.environ.get("CLAUDE_TEST_LOCK") or "/tmp/php-artisan-test.lock"
 SHELLS = {"bash", "sh", "dash", "zsh", "ksh"}
 TEST_BINS = {"phpunit", "paratest", "pest"}
 ASSIGNMENT = re.compile(r"[A-Za-z_][A-Za-z0-9_]*=")
+MAX_ECHOED_COMMAND = 400  # characters of the blocked command repeated in the error message
 
 
 def skip_options(tokens, value_options):
@@ -134,7 +135,13 @@ def main():
             raise ValueError("command must be a string or argv array")
         if has_unlocked_test(command):
             shell_command = shlex.join(command) if isinstance(command, list) else command
-            wrapped = shlex.join(["bash", str(RUNNER), shell_command])
+            if len(shell_command) <= MAX_ECHOED_COMMAND:
+                wrapped = shlex.join(["bash", str(RUNNER), shell_command])
+            else:
+                # A long command (heredocs, file writes bundled with the test run) would be echoed back in full
+                # and cost the caller the same tokens twice; show the form and let them split the call.
+                wrapped = shlex.join(["bash", str(RUNNER), "<the test command only>"])
+                wrapped += "\n\nThe command was not repeated here because it is long. Run the test command in its own call, apart from file writes."
             print(
                 "Test runs must hold the shared host lock. Re-run through the runner "
                 "(it waits in line; Docker needs no flock inside the container):\n\n" + wrapped,

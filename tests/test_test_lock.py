@@ -45,6 +45,18 @@ class TestLock(unittest.TestCase):
             with self.subTest(command=command):
                 self.assertEqual(self.hook(command).returncode, 2)
 
+    def test_block_message_repeats_a_short_command_but_not_a_long_one(self):
+        short = self.hook("vendor/bin/phpunit")
+        self.assertEqual(short.returncode, 2)
+        self.assertIn("vendor/bin/phpunit", short.stderr)
+
+        filler = "x" * 5000
+        long = self.hook(f"cat > f <<'E'\n{filler}\nE\nvendor/bin/phpunit")
+        self.assertEqual(long.returncode, 2)
+        self.assertNotIn(filler, long.stderr)
+        self.assertLess(len(long.stderr), 600)
+        self.assertIn("<the test command only>", long.stderr)
+
     def test_wrapped_commands_are_allowed(self):
         for command in [
             f"bash {RUNNER} 'docker compose exec -T app php artisan test --parallel'",
