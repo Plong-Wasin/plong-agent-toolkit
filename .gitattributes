@@ -1,0 +1,10 @@
+# Normalise text to LF in every checkout.
+* text=auto eol=lf
+
+# Language-aware hunk headers in diffs.
+*.md diff=markdown
+*.py diff=python
+*.html diff=html
+
+# The attributes file stays out of release archives.
+/.gitattributes export-ignore
