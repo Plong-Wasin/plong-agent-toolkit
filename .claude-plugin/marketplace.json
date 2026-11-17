@@ -101,6 +101,11 @@
       "name": "build-cli",
       "source": "./plugins/build-cli",
       "description": "Plong's approach to building a CLI client for an MCP server or API: shortcuts chosen from session history, modular TypeScript bundled to one file, multi-profile OAuth/token auth, black-box tests against a fake server, CI release branch, and a Claude Code + Codex skill"
+    },
+    {
+      "name": "rm-guard",
+      "source": "./plugins/rm-guard",
+      "description": "Answer rm and rmdir commands built from unguarded shell variables with a rewrite hint, so unattended Claude Code sessions never stall on its rm safety prompt"
     }
   ]
 }

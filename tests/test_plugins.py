@@ -190,5 +190,54 @@ class PluginPackages(unittest.TestCase):
         self.assertTrue(all(GENERATOR["generated_metadata"](path) for path in index))
 
 
+class RmGuardHook(unittest.TestCase):
+    HOOK = ROOT / "plugins/rm-guard/hook-scripts/rm-guard.py"
+
+    def run_hook(self, payload):
+        text = payload if isinstance(payload, str) else json.dumps(payload)
+        return subprocess.run(["python3", str(self.HOOK)], input=text, capture_output=True, text=True, timeout=20)
+
+    def bash(self, command):
+        return self.run_hook({"tool_name": "Bash", "tool_input": {"command": command}})
+
+    def test_unguarded_variable_in_a_delete_is_sent_back_with_a_rewrite_hint(self):
+        for command in [
+            'rm -f "$B/$d/node_modules"',
+            "rm -rf ${TMP}/x",
+            'cd /x; rm -f "$HOME/y"',
+            'rmdir "$(mktemp -d)"',
+            'for d in a b; do rm -f "$B/$d/node_modules"; done',
+            'if [ -d x ]; then rm -rf $X; fi',
+            'sudo rm -rf "$B"',
+        ]:
+            with self.subTest(command=command):
+                result = self.bash(command)
+                self.assertEqual(result.returncode, 0)
+                output = json.loads(result.stdout)["hookSpecificOutput"]
+                self.assertEqual(output["hookEventName"], "PreToolUse")
+                self.assertEqual(output["permissionDecision"], "deny")
+                self.assertIn("${NAME:?}", output["permissionDecisionReason"])
+
+    def test_guarded_literal_and_unrelated_commands_pass_silently(self):
+        for command in [
+            'rm -rf "${B:?}/${d:?}/node_modules"',
+            "rm -rf /tmp/literal/path",
+            "echo $HOME && rm -f x",
+            'ls "$B"',
+            'git worktree remove --force "$B"',
+            'for d in a b; do rm -f "${B:?}/${d:?}/node_modules"; done',
+            "echo remove $B",
+        ]:
+            with self.subTest(command=command):
+                result = self.bash(command)
+                self.assertEqual((result.returncode, result.stdout), (0, ""))
+
+    def test_other_tools_and_broken_input_never_block(self):
+        for payload in [{"tool_name": "Read", "tool_input": {"file_path": "x"}}, "not json", {}, {"tool_name": "Bash", "tool_input": {"command": 5}}]:
+            with self.subTest(payload=payload):
+                result = self.run_hook(payload)
+                self.assertEqual((result.returncode, result.stdout), (0, ""))
+
+
 if __name__ == "__main__":
     unittest.main()

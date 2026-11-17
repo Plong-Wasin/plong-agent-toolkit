@@ -1,0 +1,20 @@
+{
+  "name": "rm-guard",
+  "description": "Answer rm and rmdir commands built from unguarded shell variables with a rewrite hint, so unattended Claude Code sessions never stall on its rm safety prompt",
+  "author": {
+    "name": "plong"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hook-scripts/rm-guard.py\""
+          }
+        ]
+      }
+    ]
+  }
+}
