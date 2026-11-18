@@ -36,5 +36,7 @@
   "plugins/rm-guard/.claude-plugin/plugin.json",
   "plugins/scrutinize/.claude-plugin/plugin.json",
   "plugins/scrutinize/.codex-plugin/plugin.json",
+  "plugins/ui-review/.claude-plugin/plugin.json",
+  "plugins/ui-review/.codex-plugin/plugin.json",
   "plugins/usage-guard-hook/.claude-plugin/plugin.json"
 ]

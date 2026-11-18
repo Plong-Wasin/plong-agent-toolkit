@@ -396,6 +396,17 @@
       "files": [
         "hook-scripts/rm-guard.py"
       ]
+    },
+    {
+      "name": "ui-review",
+      "description": "Review a UI change from rendered screenshots: a fresh agent critiques every changed screen and state at phone and desktop size in each shipped language and returns severity-ordered findings. Use before opening a PR that touches screens, components, styles or UI copy, and on /ui-review.",
+      "skills": [
+        "./skills/ui-review"
+      ],
+      "clients": [
+        "claude",
+        "codex"
+      ]
     }
   ]
 }
